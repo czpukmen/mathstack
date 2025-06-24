@@ -2928,7 +2928,7 @@
                 position: fixed;
                 pointer-events: none;
                 z-index: 10000;
-                opacity: 0.8;
+                opacity: 0.9;
                 transform: translate(-50%, -50%);
                 transition: none;
                 width: 50px;
@@ -2940,8 +2940,9 @@
                 font-weight: bold;
                 font-size: 16px;
                 color: white;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                border: 2px solid rgba(255,255,255,0.3);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+                border: 2px solid rgba(255,255,255,0.5);
+                backdrop-filter: blur(5px);
             `;
             document.body.appendChild(visual);
             return visual;
@@ -2951,18 +2952,20 @@
             const target = e.target.closest('.cell, .temp-slot, .collection-number');
             if (!target || !target.draggable) return;
             
+            // Only handle touch events on mobile devices
+            if (window.innerWidth > 768) return;
+            
             touchStartTime = Date.now();
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
             isDragging = false;
             touchDraggedElement = target;
             
-            // Prevent default only for draggable elements
-            e.preventDefault();
-        }, { passive: false });
+            // Don't prevent default here to allow normal click events
+        }, { passive: true });
         
         document.addEventListener('touchmove', function(e) {
-            if (!touchDraggedElement) return;
+            if (!touchDraggedElement || window.innerWidth > 768) return;
             
             const touch = e.touches[0];
             const deltaX = Math.abs(touch.clientX - touchStartX);
@@ -2972,6 +2975,7 @@
             // Start dragging after a small movement or time threshold
             if (!isDragging && (deltaX > 10 || deltaY > 10 || deltaTime > 200)) {
                 isDragging = true;
+                e.preventDefault(); // Only prevent default when actually dragging
                 
                 // Create visual drag element
                 dragVisualElement = createDragVisual();
@@ -3067,11 +3071,18 @@
         }, { passive: false });
         
         document.addEventListener('touchend', function(e) {
+            if (window.innerWidth > 768) return;
+            
             if (!isDragging || !touchDraggedElement || !touchDragData) {
                 // Handle tap events for non-drag interactions
                 const target = e.target.closest('.cell, .temp-slot, .collection-stack, .collection-number');
                 if (target && !isDragging) {
-                    handleTapEvent(target, e);
+                    // Use a small delay to ensure this is a tap, not a drag
+                    setTimeout(() => {
+                        if (!isDragging) {
+                            handleTapEvent(target, e);
+                        }
+                    }, 50);
                 }
                 
                 // Reset touch state
@@ -3113,7 +3124,7 @@
             touchDraggedElement = null;
             touchDragData = null;
             isDragging = false;
-        }, { passive: false });
+        }, { passive: true });
         
         // Handle tap events for non-drag interactions
         function handleTapEvent(target, event) {
