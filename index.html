@@ -1234,10 +1234,42 @@
             .cell.dragging,
             .temp-slot.dragging,
             .collection-number.dragging {
-                opacity: 0.5 !important;
-                transform: scale(0.95) !important;
+                opacity: 0.3 !important;
+                transform: scale(0.9) !important;
                 z-index: 1000 !important;
                 pointer-events: none;
+                transition: opacity 0.2s ease, transform 0.2s ease;
+            }
+            
+            /* Visual drag element styles */
+            #drag-visual {
+                position: fixed;
+                pointer-events: none;
+                z-index: 10000;
+                opacity: 0.9;
+                transform: translate(-50%, -50%);
+                transition: none;
+                width: 50px;
+                height: 50px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 16px;
+                color: white;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+                border: 2px solid rgba(255,255,255,0.5);
+                backdrop-filter: blur(5px);
+            }
+            
+            /* Enhanced drop target highlighting for mobile */
+            .drag-hover {
+                border-color: #ffd89b !important;
+                background: rgba(255, 216, 155, 0.3) !important;
+                transform: scale(1.05) !important;
+                transition: all 0.2s ease !important;
+                box-shadow: 0 0 20px rgba(255, 216, 155, 0.5) !important;
             }
         }
     </style>
@@ -2886,6 +2918,34 @@
         let isDragging = false;
         let touchDraggedElement = null;
         let touchDragData = null;
+        let dragVisualElement = null;
+        
+        // Create visual drag element
+        function createDragVisual() {
+            const visual = document.createElement('div');
+            visual.id = 'drag-visual';
+            visual.style.cssText = `
+                position: fixed;
+                pointer-events: none;
+                z-index: 10000;
+                opacity: 0.8;
+                transform: translate(-50%, -50%);
+                transition: none;
+                width: 50px;
+                height: 50px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 16px;
+                color: white;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                border: 2px solid rgba(255,255,255,0.3);
+            `;
+            document.body.appendChild(visual);
+            return visual;
+        }
         
         document.addEventListener('touchstart', function(e) {
             const target = e.target.closest('.cell, .temp-slot, .collection-number');
@@ -2913,6 +2973,9 @@
             if (!isDragging && (deltaX > 10 || deltaY > 10 || deltaTime > 200)) {
                 isDragging = true;
                 
+                // Create visual drag element
+                dragVisualElement = createDragVisual();
+                
                 // Initialize drag data similar to handleDragStart
                 if (touchDraggedElement.classList.contains('cell')) {
                     const row = parseInt(touchDraggedElement.dataset.row);
@@ -2928,6 +2991,11 @@
                             card: topCard
                         };
                         touchDraggedElement.classList.add('dragging');
+                        
+                        // Set visual element properties
+                        dragVisualElement.textContent = topCard.num;
+                        dragVisualElement.className = `theme-${topCard.color}`;
+                        dragVisualElement.style.background = getComputedStyle(touchDraggedElement).background;
                     }
                 } else if (touchDraggedElement.classList.contains('temp-slot')) {
                     const slotIndex = parseInt(touchDraggedElement.dataset.slot);
@@ -2940,6 +3008,12 @@
                             slotData: slotData
                         };
                         touchDraggedElement.classList.add('dragging');
+                        
+                        // Set visual element properties for temp slot
+                        const topCard = slotData[slotData.length - 1];
+                        dragVisualElement.textContent = slotData.length > 1 ? `${slotData.length} cards` : topCard.num;
+                        dragVisualElement.className = `theme-${topCard.color}`;
+                        dragVisualElement.style.background = getComputedStyle(touchDraggedElement).background;
                     }
                 } else if (touchDraggedElement.classList.contains('collection-number')) {
                     const stack = touchDraggedElement.closest('.collection-stack');
@@ -2954,17 +3028,26 @@
                             num: num
                         };
                         touchDraggedElement.classList.add('dragging');
+                        
+                        // Set visual element properties
+                        dragVisualElement.textContent = num;
+                        dragVisualElement.className = `theme-${color}`;
+                        dragVisualElement.style.background = getComputedStyle(touchDraggedElement).background;
                     }
                 }
             }
             
-            if (isDragging) {
+            if (isDragging && dragVisualElement) {
                 e.preventDefault();
+                
+                // Update visual drag element position
+                dragVisualElement.style.left = touch.clientX + 'px';
+                dragVisualElement.style.top = touch.clientY + 'px';
                 
                 // Update drag visual feedback
                 if (touchDraggedElement) {
-                    touchDraggedElement.style.opacity = '0.5';
-                    touchDraggedElement.style.transform = 'scale(0.95)';
+                    touchDraggedElement.style.opacity = '0.3';
+                    touchDraggedElement.style.transform = 'scale(0.9)';
                 }
                 
                 // Find drop target under touch point
@@ -3007,6 +3090,12 @@
                 touchDraggedElement.classList.remove('dragging');
                 touchDraggedElement.style.opacity = '';
                 touchDraggedElement.style.transform = '';
+            }
+            
+            // Remove visual drag element
+            if (dragVisualElement) {
+                dragVisualElement.remove();
+                dragVisualElement = null;
             }
             
             document.querySelectorAll('.drag-hover').forEach(el => {
