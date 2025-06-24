@@ -1,0 +1,2886 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Math Stack</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Collect arithmetic sequences by color in this engaging puzzle game">
+    <meta name="theme-color" content="#4ecdc4">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Math Stack">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="48x48" href="/icon-48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/icon-96.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="/icon-144.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a2e;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+        
+        .game-container {
+            width: 100%;
+            max-width: 380px;
+            height: 100vh;
+            max-height: 100vh;
+            background: #1a1a2e;
+            border-radius: 0;
+            padding: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+                align-items: stretch;
+            }
+            
+            .game-container {
+                max-width: 100%;
+                padding: 8px;
+                border-radius: 0;
+                height: 100vh;
+            }
+        }
+        
+        .header {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 15px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-bottom: 3px;
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                margin-bottom: 10px;
+            }
+            
+            .title {
+                font-size: 18px;
+                margin-bottom: 4px;
+            }
+            
+            .stats {
+                gap: 12px;
+                font-size: 11px;
+            }
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-label {
+            font-weight: bold;
+        }
+        
+        .timer {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+        
+        .moves {
+            color: #ffd89b;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 480px) {
+            .stats {
+                gap: 15px;
+                font-size: 13px;
+            }
+        }
+        
+        .menu-burger {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-burger:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        
+        .menu-dropdown {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: #2a2a3e;
+            border-radius: 12px;
+            min-width: 200px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .menu-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .menu-item {
+            padding: 12px 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .menu-item:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .menu-item.submenu {
+            position: relative;
+        }
+        
+        .submenu-content {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background: #2a2a3e;
+            border-radius: 8px;
+            min-width: 150px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .submenu:hover .submenu-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            color: #fff;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        @media (max-width: 480px) {
+            .modal-content {
+                padding: 20px;
+                width: 95%;
+                border-radius: 15px;
+            }
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            opacity: 1;
+        }
+        
+        .how-to-section {
+            margin-bottom: 20px;
+        }
+        
+        .how-to-section h3 {
+            color: #4ecdc4;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .how-to-section p {
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .hint-description {
+            background: rgba(78, 205, 196, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .hint-description strong {
+            color: #4ecdc4;
+        }
+        
+        .collections {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            gap: 6px;
+            position: relative;
+            z-index: 5;
+            flex-shrink: 0;
+        }
+        
+        .collection-stack {
+            width: 55px;
+            height: 70px;
+            border: 2px dashed #4ecdc4;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 4px;
+            background: rgba(78, 205, 196, 0.1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 480px) {
+            .collections {
+                gap: 3px;
+                margin-bottom: 10px;
+            }
+            
+            .collection-stack {
+                width: calc((100vw - 40px) / 5);
+                max-width: 55px;
+                height: 60px;
+                padding: 3px;
+            }
+        }
+        
+        .collection-stack:hover {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
+        }
+        
+        .collection-stack.selected {
+            border-color: #ffd89b;
+            background: rgba(255, 216, 155, 0.2);
+            box-shadow: 0 0 15px rgba(255, 216, 155, 0.5);
+        }
+        
+        .collection-stack.completed {
+            border-color: #4ecdc4;
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.3), rgba(78, 205, 196, 0.5));
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.4);
+        }
+        
+        .collection-stack.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #4ecdc4;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.8);
+            z-index: 10;
+        }
+        
+        .collection-stack::before {
+            content: attr(data-theme);
+            position: absolute;
+            top: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+        
+        .collection-number {
+            width: 30px;
+            height: 25px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 2px;
+            animation: slideUp 0.3s ease-out;
+            cursor: pointer;
+        }
+        
+        .theme-red { background: #ff4757; color: white; }
+        .theme-blue { background: #3742fa; color: white; }
+        .theme-yellow { background: #ffa502; color: white; }
+        .theme-green { background: #2ed573; color: white; }
+        .theme-purple { background: #a55eea; color: white; }
+        
+        .game-field {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            isolation: isolate;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (max-width: 480px) {
+            .game-field {
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 10px;
+            }
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-rows: repeat(var(--grid-rows, 5), minmax(0, 1fr));
+            gap: clamp(4px, 1vw, 8px);
+            margin-bottom: 10px;
+            position: relative;
+            overflow: visible;
+            z-index: 10;
+            flex: 1;
+            min-height: 0;
+        }
+        
+        @media (max-width: 480px) {
+            .grid {
+                gap: 4px;
+                margin-bottom: 8px;
+            }
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            min-width: 0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: clamp(12px, 3vw, 16px);
+            position: relative;
+            cursor: pointer;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+            border: 2px solid transparent;
+            transform-origin: center;
+            margin: 0;
+            padding: 0;
+            overflow: visible;
+            pointer-events: auto;
+            z-index: 1;
+        }
+        
+        @media (max-width: 480px) {
+            .cell {
+                font-size: clamp(14px, 4vw, 16px);
+                border-radius: 8px;
+            }
+        }
+        
+        .cell.blocked {
+            background: #2d2d2d;
+            color: #666;
+            cursor: not-allowed;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .cell.blocked::before {
+            content: '🔒';
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            font-size: 16px;
+            opacity: 0.9;
+            z-index: 20;
+            pointer-events: none;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cell.unlocked {
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+        
+        .cell.unlocked:hover {
+            box-shadow: 0 6px 20px rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.2);
+            z-index: 3;
+        }
+        
+        .cell.selected {
+            border-color: #ffd89b;
+            box-shadow: 0 0 20px rgba(255, 216, 155, 0.6);
+            z-index: 4;
+        }
+        
+        .cell.stack {
+            position: relative;
+        }
+        
+        .cell.stack::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 20;
+            pointer-events: none;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            border: 2px solid white;
+        }
+        
+        .cell.empty {
+            background: rgba(255,255,255,0.1);
+            border: 2px dashed rgba(255,255,255,0.3);
+        }
+        
+        .cell.unlocked::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid transparent;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.2s ease, border-color 0.2s ease;
+            pointer-events: none;
+        }
+        
+        .cell.unlocked:hover::before {
+            opacity: 1;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .temp-slots {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        
+        .temp-slot {
+            flex: 1;
+            height: 80px;
+            border: 2px dashed #666;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 5px;
+            background: rgba(255,255,255,0.05);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 480px) {
+            .temp-slots {
+                gap: 5px;
+                margin-bottom: 8px;
+            }
+            
+            .temp-slot {
+                height: 70px;
+                padding: 4px;
+            }
+        }
+        
+        .temp-slot:hover {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+        
+        .temp-slot.occupied {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
+        }
+        
+        .temp-slot.selected {
+            border-color: #ffd89b;
+            background: rgba(255, 216, 155, 0.2);
+            box-shadow: 0 0 15px rgba(255, 216, 155, 0.3);
+        }
+        
+        .temp-slot-label {
+            position: absolute;
+            top: 3px;
+            color: #666;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .temp-number {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+        
+        .temp-middle-card {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            position: relative;
+            opacity: 0.7;
+        }
+        
+        .middle-card-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #2ed573;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 20;
+            pointer-events: none;
+            border: 1px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+        }
+        
+        .undo-btn, .shuffle-btn {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            border: none;
+            padding: 12px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            flex: 1;
+            min-width: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        @media (max-width: 480px) {
+            .controls {
+                gap: 4px;
+            }
+            
+            .button-group {
+                gap: 4px;
+            }
+            
+            .undo-btn, .shuffle-btn {
+                padding: 10px 8px;
+                font-size: 12px;
+                border-radius: 12px;
+            }
+        }
+        
+        .shuffle-btn {
+            background: linear-gradient(45deg, #a55eea, #764ba2);
+        }
+        
+        .undo-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .undo-btn:hover:not(:disabled), 
+        .shuffle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .cell.drop-target {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
+            animation: dropPulse 1s infinite;
+        }
+        
+        .cell.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            z-index: 1000;
+        }
+        
+        .temp-slot.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        
+        .collection-number.dragging {
+            opacity: 0.5;
+            transform: scale(0.9);
+        }
+        
+        .drag-hover {
+            border-color: #ffd89b !important;
+            background: rgba(255, 216, 155, 0.3) !important;
+            transform: scale(1.05);
+            transition: all 0.2s ease;
+        }
+        
+        .cell[draggable="true"] {
+            cursor: grab;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            touch-action: none;
+        }
+        
+        .cell[draggable="true"]:active {
+            cursor: grabbing;
+        }
+        
+        .temp-slot[draggable="true"] {
+            cursor: grab;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            touch-action: none;
+        }
+        
+        .temp-slot[draggable="true"]:active {
+            cursor: grabbing;
+        }
+        
+        .collection-number {
+            cursor: grab;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            touch-action: none;
+        }
+        
+        .collection-number:active {
+            cursor: grabbing;
+        }
+        
+        /* Prevent text selection during drag */
+        .dragging, .drag-hover {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        @keyframes dropPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(78, 205, 196, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(78, 205, 196, 0.6); }
+        }
+        
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+        
+        .message.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(5px);
+        }
+        
+        @media (max-width: 480px) {
+            .message {
+                top: 10px;
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+        }
+        
+        @media (hover: none) and (pointer: coarse) {
+            .cell.unlocked:active {
+                box-shadow: 0 6px 20px rgba(255,255,255,0.3);
+                border-color: rgba(255,255,255,0.2);
+            }
+            
+            .undo-btn:active:not(:disabled), 
+            .shuffle-btn:active {
+                transform: translateY(-1px);
+                box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .header {
+                margin-bottom: 15px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .stats {
+                font-size: 12px;
+                gap: 10px;
+            }
+            
+            .cell {
+                font-size: 13px;
+            }
+        }
+    
+
+        /* Стили для модального окна выбора сложности */
+        .modal#howToPlayModal {
+            background: rgba(0,0,0,0.8);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .difficulty-selection {
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .difficulty-selection h2 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .difficulty-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            position: relative;
+        }
+
+        .difficulty-btn.easy {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+
+        .difficulty-btn.medium {
+            background: linear-gradient(45deg, #ff9800, #f57c00);
+        }
+
+        .difficulty-btn.hard {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .difficulty-emoji {
+            margin-right: 10px;
+        }
+
+        .difficulty-name {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .difficulty-range {
+            opacity: 0.8;
+        }
+
+        .recommended-tag {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ffd89b;
+            color: #333;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* Стили для экрана финиша */
+        .victory-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(16, 33, 62, 0.95));
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .victory-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .victory-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            transform: scale(0.8) translateY(50px);
+            transition: transform 0.4s ease;
+            border: 2px solid rgba(78, 205, 196, 0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        
+        .victory-modal.show .victory-content {
+            transform: scale(1) translateY(0);
+        }
+        
+        .victory-header {
+            margin-bottom: 30px;
+        }
+        
+        .victory-emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+            animation: victoryBounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes victoryBounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .victory-title {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #ffd89b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .victory-subtitle {
+            color: #a0a0a0;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .victory-stats {
+            background: rgba(78, 205, 196, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(78, 205, 196, 0.2);
+        }
+        
+        .victory-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .victory-stat-row:last-child {
+            margin-bottom: 0;
+            padding-top: 15px;
+            border-top: 2px solid rgba(78, 205, 196, 0.3);
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .victory-stat-label {
+            color: #a0a0a0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .victory-stat-value {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .victory-score {
+            background: linear-gradient(45deg, #ffd89b, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+        }
+        
+        .victory-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .victory-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .victory-btn.primary {
+            background: linear-gradient(45deg, #4ecdc4, #2ed573);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+        
+        .victory-btn.secondary {
+            background: linear-gradient(45deg, #a55eea, #764ba2);
+            box-shadow: 0 4px 15px rgba(165, 94, 234, 0.3);
+        }
+        
+        .victory-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 480px) {
+            .victory-content {
+                padding: 30px 20px;
+                border-radius: 20px;
+            }
+            
+            .victory-emoji {
+                font-size: 50px;
+            }
+            
+            .victory-title {
+                font-size: 24px;
+            }
+            
+            .victory-stats {
+                padding: 20px;
+            }
+            
+            .victory-stat-row {
+                font-size: 14px;
+            }
+            
+            .victory-stat-row:last-child {
+                font-size: 16px;
+            }
+        }
+        
+        /* Additional mobile improvements */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .game-container * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Improve touch targets */
+        .cell, .temp-slot, .collection-stack, .collection-number {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Better visual feedback for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .cell.unlocked:active,
+            .temp-slot:active,
+            .collection-stack:active,
+            .collection-number:active {
+                transform: scale(0.95);
+                transition: transform 0.1s ease;
+            }
+            
+            .cell.unlocked:active {
+                box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Game Container initially hidden -->
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <div class="header">
+            <div class="title">Math Stack</div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Время:</span>
+                    <span class="timer" id="timer">00:00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Ходы:</span>
+                    <span class="moves" id="moves">0</span>
+                </div>
+            </div>
+            
+            <button class="menu-burger" onclick="toggleMenu()">☰</button>
+            <div class="menu-dropdown" id="menuDropdown">
+                <div class="menu-item" onclick="newGame()">🎮 New Game</div>
+                <div class="menu-item submenu">
+                    🎯 Change Difficulty
+                    <div class="submenu-content">
+                        <div class="menu-item" onclick="changeDifficulty('supereasy')">Easy (1-5, 5×3)</div>
+                        <div class="menu-item" onclick="changeDifficulty('easy')">Medium (1-10, 5×4)</div>
+                        <div class="menu-item" onclick="changeDifficulty('hard')">Hard (1-15, 5×5)</div>
+                    </div>
+                </div>
+                <div class="menu-item" onclick="showHowToPlay()">❓ How to Play?</div>
+            </div>
+        </div>
+        
+        <div class="collections" id="collections">
+            <div class="collection-stack" data-color="red" data-theme="🔴"></div>
+            <div class="collection-stack" data-color="blue" data-theme="🔵"></div>
+            <div class="collection-stack" data-color="yellow" data-theme="🟡"></div>
+            <div class="collection-stack" data-color="green" data-theme="🟢"></div>
+            <div class="collection-stack" data-color="purple" data-theme="🟣"></div>
+        </div>
+        
+        <div class="game-field">
+            <div class="grid" id="grid"></div>
+        </div>
+        
+        <div class="temp-slots" id="tempSlots">
+            <div class="temp-slot" data-slot="0">
+                <span class="temp-slot-label">Stack 1</span>
+            </div>
+            <div class="temp-slot" data-slot="1">
+                <span class="temp-slot-label">Stack 2</span>
+            </div>
+            <div class="temp-slot" data-slot="2">
+                <span class="temp-slot-label">Stack 3</span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="button-group">
+                <button class="undo-btn" id="undoBtn" onclick="undoMove()">↶ Undo</button>
+                <button class="shuffle-btn" onclick="shuffleCards()">🔀 Shuffle</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal show" id="difficultyModal">
+        <div class="modal-content difficulty-selection">
+            <div class="welcome-logo">🎯</div>
+            <h1 class="welcome-title">Math Stack</h1>
+            <p class="welcome-subtitle">Choose your difficulty level</p>
+            
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn easy" onclick="selectDifficulty('supereasy')">
+                    <span class="difficulty-emoji">🌟</span>
+                    <span class="difficulty-name">Easy</span>
+                    <span class="difficulty-range">1-5 (5×3)</span>
+                </button>
+                
+                <button class="difficulty-btn medium" onclick="selectDifficulty('easy')">
+                    <span class="difficulty-emoji">⭐</span>
+                    <span class="difficulty-name">Medium</span>
+                    <span class="difficulty-range">1-10 (5×4)</span>
+                </button>
+                
+                <button class="difficulty-btn hard" onclick="selectDifficulty('hard')">
+                    <span class="difficulty-emoji">🔥</span>
+                    <span class="difficulty-name">Hard</span>
+                    <span class="difficulty-range">1-15 (5×5)</span>
+                    <span class="recommended-tag">RECOMMENDED</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="howToPlayModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-header">How to Play Math Stack</div>
+            
+            <div class="how-to-section">
+                <h3>🎯 Goal</h3>
+                <p>Collect five arithmetic sequences by color. Each sequence must go from <strong>1 to 5/10/15</strong> or from <strong>15/10/5 to 1</strong>.</p>
+            </div>
+            
+            <div class="how-to-section">
+                <h3>🎮 Gameplay</h3>
+                <p>• Click cards to collect them in sequences</p>
+                <p>• Only bottom row cards are unlocked initially</p>
+                <p>• Collecting cards unlocks adjacent cards</p>
+                <p>• Use temporary slots (Stacks) for strategy</p>
+                <p>• Move cards to empty spaces on the field</p>
+            </div>
+            
+            <div class="how-to-section">
+                <h3>💡 Special Slots</h3>
+                
+                <div class="hint-description">
+                    <strong>🎯 Stack 1-3:</strong> These slots automatically work as stacking areas. When you place a card here, you can stack the next or previous number of the same color on top. These stacks can only be moved to collections when they fit the sequence.
+                </div>
+                
+                <div class="hint-description">
+                    <strong>🔀 Shuffle:</strong> Completely reshuffles all remaining cards on the field and redistributes them. Resets the game state to bottom-row-only unlocked. Adds +10 moves to your counter.
+                </div>
+                
+                <div class="hint-description">
+                    <strong>↶ Undo:</strong> Cancels the last move and adds +1 move to your counter. Can be used unlimited times to try different strategies.
+                </div>
+            </div>
+            
+            <div class="how-to-section">
+                <h3>🏆 Victory</h3>
+                <p>Complete all five color sequences to win!</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="victory-modal" id="victoryModal">
+        <div class="victory-content">
+            <div class="victory-header">
+                <div class="victory-emoji">🎉</div>
+                <div class="victory-title">Поздравляем!</div>
+                <div class="victory-subtitle">Уровень успешно пройден!</div>
+            </div>
+            
+            <div class="victory-stats">
+                <div class="victory-stat-row">
+                    <span class="victory-stat-label">⏱️ Время:</span>
+                    <span class="victory-stat-value" id="victoryTime">00:00</span>
+                </div>
+                <div class="victory-stat-row">
+                    <span class="victory-stat-label">🎯 Ходы:</span>
+                    <span class="victory-stat-value" id="victoryMoves">0</span>
+                </div>
+                <div class="victory-stat-row">
+                    <span class="victory-stat-label">⭐ Сложность:</span>
+                    <span class="victory-stat-value" id="victoryDifficulty">Hard</span>
+                </div>
+                <div class="victory-stat-row">
+                    <span class="victory-stat-label">🏆 Очки:</span>
+                    <span class="victory-stat-value victory-score" id="victoryScore">0</span>
+                </div>
+            </div>
+            
+            <div class="victory-buttons">
+                <button class="victory-btn primary" onclick="startNewGame()">
+                    🎮 Новая игра
+                </button>
+                <button class="victory-btn secondary" onclick="closeVictoryModal()">
+                    📊 Продолжить
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="message" id="message"></div>
+
+    <script>
+        let gameState = {
+            grid: [],
+            collections: { red: [], blue: [], yellow: [], green: [], purple: [] },
+            tempSlots: [[], [], []], // Теперь это массивы для хранения стеков
+            selected: null,
+            moves: 0,
+            gridSize: { rows: 5, cols: 5 },
+            history: [],
+            difficulty: 'hard',
+            maxNumber: 15,
+            startTime: null,
+            timerInterval: null
+        };
+
+        const colors = ['red', 'blue', 'yellow', 'green', 'purple'];
+        
+        function startTimer() {
+            if (!gameState.startTime) {
+                gameState.startTime = Date.now();
+                gameState.timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+        
+        function stopTimer() {
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+                gameState.timerInterval = null;
+            }
+        }
+        
+        function resetTimer() {
+            stopTimer();
+            gameState.startTime = null;
+            document.getElementById('timer').textContent = '00:00';
+        }
+        
+        function updateTimer() {
+            if (!gameState.startTime) return;
+            
+            const elapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function generateLevel() {
+            const maxNum = gameState.maxNumber;
+            const allNumbers = [];
+            colors.forEach(color => {
+                for (let num = 1; num <= maxNum; num++) {
+                    allNumbers.push({ num, color });
+                }
+            });
+            
+            // Перемешиваем карты
+            for (let i = allNumbers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allNumbers[i], allNumbers[j]] = [allNumbers[j], allNumbers[i]];
+            }
+            
+            const grid = [];
+            const { rows, cols } = gameState.gridSize;
+            
+            // Создаем пустую сетку
+            for (let row = 0; row < rows; row++) {
+                grid[row] = [];
+                for (let col = 0; col < cols; col++) {
+                    grid[row][col] = { 
+                        stack: [], 
+                        state: row === rows - 1 ? 'unlocked' : 'blocked'
+                    };
+                }
+            }
+            
+            // Для Super Easy (25 карт на 15 ячеек) оставляем некоторые ячейки пустыми
+            if (gameState.difficulty === 'supereasy') {
+                // Создаем массив всех позиций
+                const positions = [];
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        positions.push({row, col});
+                    }
+                }
+                
+                // Перемешиваем позиции
+                for (let i = positions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [positions[i], positions[j]] = [positions[j], positions[i]];
+                }
+                
+                // Распределяем карты по случайным позициям
+                let numberIndex = 0;
+                for (let i = 0; i < positions.length && numberIndex < allNumbers.length; i++) {
+                    const {row, col} = positions[i];
+                    
+                    // Создаем стопки реже для Super Easy
+                    if (Math.random() < 0.15 && numberIndex + 1 < allNumbers.length) {
+                        const stackSize = Math.min(2, allNumbers.length - numberIndex);
+                        for (let j = 0; j < stackSize; j++) {
+                            grid[row][col].stack.push(allNumbers[numberIndex++]);
+                        }
+                    } else if (Math.random() < 0.85 || row === rows - 1) { // Больше шанс заполнить нижний ряд
+                        grid[row][col].stack.push(allNumbers[numberIndex++]);
+                    }
+                }
+                
+                // Распределяем оставшиеся карты
+                while (numberIndex < allNumbers.length) {
+                    const row = Math.floor(Math.random() * rows);
+                    const col = Math.floor(Math.random() * cols);
+                    if (grid[row][col].stack.length === 0) {
+                        grid[row][col].stack.push(allNumbers[numberIndex++]);
+                    } else if (grid[row][col].stack.length < 3) {
+                        grid[row][col].stack.push(allNumbers[numberIndex++]);
+                    }
+                }
+            } else {
+                // Обычная генерация для Easy и Hard
+                let numberIndex = 0;
+                
+                // Распределяем карты по сетке
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        if (numberIndex < allNumbers.length) {
+                            // Случайно создаем стопки карт
+                            if (Math.random() < 0.3 && numberIndex + 1 < allNumbers.length) {
+                                const stackSize = Math.min(
+                                    Math.floor(Math.random() * 3) + 2, 
+                                    allNumbers.length - numberIndex
+                                );
+                                for (let i = 0; i < stackSize; i++) {
+                                    grid[row][col].stack.push(allNumbers[numberIndex++]);
+                                }
+                            } else {
+                                grid[row][col].stack.push(allNumbers[numberIndex++]);
+                            }
+                        }
+                    }
+                }
+                
+                // Распределяем оставшиеся карты
+                while (numberIndex < allNumbers.length) {
+                    const row = Math.floor(Math.random() * rows);
+                    const col = Math.floor(Math.random() * cols);
+                    if (grid[row][col].stack.length < 5) {
+                        grid[row][col].stack.push(allNumbers[numberIndex++]);
+                    }
+                }
+            }
+            
+            return grid;
+        }
+
+        function selectDifficulty(difficulty) {
+            if (difficulty === 'supereasy') {
+                gameState.difficulty = 'supereasy';
+                gameState.maxNumber = 5;
+                gameState.gridSize = { rows: 3, cols: 5 };
+            } else if (difficulty === 'easy') {
+                gameState.difficulty = 'easy';
+                gameState.maxNumber = 10;
+                gameState.gridSize = { rows: 4, cols: 5 };
+            } else {
+                gameState.difficulty = 'hard';
+                gameState.maxNumber = 15;
+                gameState.gridSize = { rows: 5, cols: 5 };
+            }
+            
+            document.getElementById('difficultyModal').classList.remove('show');
+            
+            setTimeout(() => {
+                document.getElementById('gameContainer').style.display = 'block';
+                initGame();
+                gameState.initialized = true;
+            }, 300);
+        }
+        
+        function calculateScore(difficulty, timeInSeconds, moves) {
+            // Базовые очки за сложность
+            let baseScore;
+            let timeBonus;
+            let movesBonus;
+            
+            if (difficulty === 'supereasy') {
+                baseScore = 1000;
+                timeBonus = Math.max(0, 300 - timeInSeconds) * 2; // Бонус за время до 5 минут
+                movesBonus = Math.max(0, 50 - moves) * 10; // Бонус за ходы до 50
+            } else if (difficulty === 'easy') {
+                baseScore = 2500;
+                timeBonus = Math.max(0, 600 - timeInSeconds) * 3; // Бонус за время до 10 минут
+                movesBonus = Math.max(0, 100 - moves) * 15; // Бонус за ходы до 100
+            } else { // hard
+                baseScore = 5000;
+                timeBonus = Math.max(0, 900 - timeInSeconds) * 4; // Бонус за время до 15 минут
+                movesBonus = Math.max(0, 150 - moves) * 20; // Бонус за ходы до 150
+            }
+            
+            return Math.round(baseScore + timeBonus + movesBonus);
+        }
+        
+        function getDifficultyName(difficulty) {
+            switch(difficulty) {
+                case 'supereasy': return 'Easy (1-5)';
+                case 'easy': return 'Medium (1-10)';
+                case 'hard': return 'Hard (1-15)';
+                default: return 'Unknown';
+            }
+        }
+        
+        function showVictoryModal(timeInSeconds, moves, difficulty) {
+            const score = calculateScore(difficulty, timeInSeconds, moves);
+            
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = timeInSeconds % 60;
+            const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById('victoryTime').textContent = timeStr;
+            document.getElementById('victoryMoves').textContent = moves;
+            document.getElementById('victoryDifficulty').textContent = getDifficultyName(difficulty);
+            document.getElementById('victoryScore').textContent = score.toLocaleString();
+            
+            document.getElementById('victoryModal').classList.add('show');
+        }
+        
+        function closeVictoryModal() {
+            document.getElementById('victoryModal').classList.remove('show');
+        }
+        
+        function startNewGame() {
+            closeVictoryModal();
+            stopTimer();
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('difficultyModal').classList.add('show');
+        }
+        
+        function initGame() {
+            gameState.grid = generateLevel();
+            gameState.collections = { red: [], blue: [], yellow: [], green: [], purple: [] };
+            gameState.tempSlots = [[], [], []];
+            gameState.selected = null;
+            gameState.moves = 0;
+            gameState.history = [];
+            resetTimer();
+            
+            setupEventDelegation();
+            updateDisplay();
+        }
+        
+        function setupEventDelegation() {
+            const grid = document.getElementById('grid');
+            grid.removeEventListener('click', handleGridClick);
+            grid.addEventListener('click', handleGridClick);
+            
+            // Add drag and drop event listeners
+            setupDragAndDrop();
+        }
+        
+        function setupDragAndDrop() {
+            const grid = document.getElementById('grid');
+            const tempSlots = document.getElementById('tempSlots');
+            const collections = document.getElementById('collections');
+            
+            // Remove existing drag listeners
+            grid.removeEventListener('dragstart', handleDragStart);
+            grid.removeEventListener('dragover', handleDragOver);
+            grid.removeEventListener('drop', handleDrop);
+            tempSlots.removeEventListener('dragstart', handleDragStart);
+            tempSlots.removeEventListener('dragover', handleDragOver);
+            tempSlots.removeEventListener('drop', handleDrop);
+            collections.removeEventListener('dragover', handleDragOver);
+            collections.removeEventListener('drop', handleDrop);
+            
+            // Add drag listeners
+            grid.addEventListener('dragstart', handleDragStart);
+            grid.addEventListener('dragover', handleDragOver);
+            grid.addEventListener('drop', handleDrop);
+            tempSlots.addEventListener('dragstart', handleDragStart);
+            tempSlots.addEventListener('dragover', handleDragOver);
+            tempSlots.addEventListener('drop', handleDrop);
+            collections.addEventListener('dragover', handleDragOver);
+            collections.addEventListener('drop', handleDrop);
+            
+            // Prevent text selection and scrolling during drag
+            document.addEventListener('selectstart', function(e) {
+                if (draggedElement) {
+                    e.preventDefault();
+                }
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (draggedElement) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Prevent context menu during drag
+            document.addEventListener('contextmenu', function(e) {
+                if (draggedElement) {
+                    e.preventDefault();
+                }
+            });
+        }
+        
+        function handleGridClick(event) {
+            const cell = event.target.closest('.cell');
+            if (!cell) return;
+            
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+            
+            if (isNaN(row) || isNaN(col)) return;
+            
+            event.preventDefault();
+            event.stopPropagation();
+            
+            handleCellClick(row, col);
+        }
+        
+        function saveState() {
+            gameState.history.push({
+                grid: JSON.parse(JSON.stringify(gameState.grid)),
+                collections: JSON.parse(JSON.stringify(gameState.collections)),
+                tempSlots: JSON.parse(JSON.stringify(gameState.tempSlots)),
+                moves: gameState.moves
+            });
+        }
+        
+        function undoMove() {
+            if (gameState.history.length === 0) return;
+            
+            const lastState = gameState.history.pop();
+            gameState.grid = lastState.grid;
+            gameState.collections = lastState.collections;
+            gameState.tempSlots = lastState.tempSlots;
+            // Не восстанавливаем moves, а добавляем +1
+            gameState.moves++;
+            gameState.selected = null;
+            
+            updateDisplay();
+            showMessage('Ход отменен (+1 ход)');
+        }
+
+        function updateDisplay() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            // Устанавливаем CSS переменную для количества рядов
+            grid.style.setProperty('--grid-rows', gameState.gridSize.rows);
+            
+            for (let row = 0; row < gameState.gridSize.rows; row++) {
+                for (let col = 0; col < gameState.gridSize.cols; col++) {
+                    const cell = document.createElement('div');
+                    const cellData = gameState.grid[row][col];
+                    
+                    cell.className = 'cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    
+                    if (cellData.stack.length === 0) {
+                        cell.classList.add('empty');
+                    cell.innerHTML = '';
+                    } else {
+                        const topCard = cellData.stack[cellData.stack.length - 1];
+                        cell.innerHTML = topCard.num;
+                        cell.classList.add(cellData.state);
+                        
+                        if (cellData.state === 'unlocked') {
+                            cell.classList.add(`theme-${topCard.color}`);
+                            // Make unlocked cells draggable
+                            cell.draggable = true;
+                            cell.dataset.dragType = 'grid';
+                            cell.dataset.cardColor = topCard.color;
+                            cell.dataset.cardNumber = topCard.num;
+                        } else {
+                            cell.draggable = false;
+                            delete cell.dataset.dragType;
+                        }
+                        
+                        if (cellData.stack.length > 1) {
+                            cell.classList.add('stack');
+                            cell.dataset.count = cellData.stack.length;
+                        }
+                    }
+                    
+                    grid.appendChild(cell);
+                }
+            }
+            
+            updateCollections();
+            updateTempSlots();
+            document.getElementById('moves').textContent = gameState.moves;
+            
+            const undoBtn = document.getElementById('undoBtn');
+            undoBtn.disabled = gameState.history.length === 0;
+        }
+
+        function updateCollections() {
+            const collections = document.getElementById('collections');
+            collections.querySelectorAll('.collection-stack').forEach((stack, index) => {
+                const color = colors[index];
+                const numbers = gameState.collections[color];
+                
+                stack.className = 'collection-stack';
+                stack.dataset.color = color;
+                stack.dataset.theme = ['🔴', '🔵', '🟡', '🟢', '🟣'][index];
+                
+                const isCompleted = numbers.length === gameState.maxNumber;
+                if (isCompleted) {
+                    stack.classList.add('completed');
+                }
+                
+                stack.innerHTML = `<div style="position: absolute; top: 3px; left: 50%; transform: translateX(-50%); font-size: 10px; color: #4ecdc4; font-weight: bold;">${stack.dataset.theme}</div>`;
+                
+                if (!isCompleted) {
+                    numbers.forEach(num => {
+                        const numberEl = document.createElement('div');
+                        numberEl.className = `collection-number theme-${color}`;
+                        numberEl.textContent = num;
+                        stack.appendChild(numberEl);
+                    });
+                }
+                
+                // Добавляем единый обработчик клика для всей коллекции
+                stack.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Проверяем, есть ли выделенный Stack для перемещения в коллекцию
+                    if (gameState.selected && gameState.selected.type === 'temp') {
+                        handleCollectionStackClick(color);
+                    } else {
+                        // Если клик по конкретному числу и нет выделенного Stack
+                        const clickedNumber = e.target.closest('.collection-number');
+                        if (clickedNumber && !isCompleted) {
+                            const num = parseInt(clickedNumber.textContent);
+                            handleCollectionClick(color, num);
+                        }
+                    }
+                });
+            });
+        }
+        
+        function toggleMenu() {
+            const dropdown = document.getElementById('menuDropdown');
+            dropdown.classList.toggle('show');
+            
+            document.addEventListener('click', function closeMenu(e) {
+                if (!e.target.closest('.menu-burger') && !e.target.closest('.menu-dropdown')) {
+                    dropdown.classList.remove('show');
+                    document.removeEventListener('click', closeMenu);
+                }
+            });
+        }
+        
+        function newGame() {
+            if (confirm('Начать новую игру?')) {
+                stopTimer();
+                document.getElementById('gameContainer').style.display = 'none';
+                document.getElementById('difficultyModal').classList.add('show');
+                document.getElementById('menuDropdown').classList.remove('show');
+            } else {
+                document.getElementById('menuDropdown').classList.remove('show');
+            }
+        }
+        
+        function changeDifficulty(difficulty) {
+            if (gameState.initialized) {
+                if (confirm('Начать новую игру с другой сложностью?')) {
+                    stopTimer();
+                    selectDifficulty(difficulty);
+                    showMessage(`Новая игра: ${getDifficultyName(difficulty)}`);
+                }
+            }
+            document.getElementById('menuDropdown').classList.remove('show');
+        }
+        
+        function showHowToPlay() {
+            document.getElementById('howToPlayModal').classList.add('show');
+            document.getElementById('menuDropdown').classList.remove('show');
+        }
+        
+        function closeModal() {
+            document.getElementById('howToPlayModal').classList.remove('show');
+        }
+
+        function updateTempSlots() {
+            const tempSlots = document.getElementById('tempSlots');
+            tempSlots.querySelectorAll('.temp-slot').forEach((slot, index) => {
+                const slotData = gameState.tempSlots[index];
+                
+                // Очищаем старые обработчики
+                const newSlot = slot.cloneNode(true);
+                slot.parentNode.replaceChild(newSlot, slot);
+                
+                newSlot.classList.remove('occupied', 'selected');
+                newSlot.innerHTML = `<span class="temp-slot-label">Stack ${index + 1}</span>`;
+                
+                if (slotData && slotData.length > 0) {
+                    newSlot.classList.add('occupied');
+                    // Make temp slots draggable when occupied
+                    newSlot.draggable = true;
+                    newSlot.dataset.dragType = 'temp';
+                    newSlot.dataset.slotIndex = index;
+                    
+                    if (slotData.length === 1) {
+                        // Одиночная карта
+                        const numberEl = document.createElement('div');
+                        numberEl.className = `temp-number theme-${slotData[0].color}`;
+                        numberEl.textContent = slotData[0].num;
+                        newSlot.appendChild(numberEl);
+                    } else if (slotData.length === 2) {
+                        // Две карты - показываем обе
+                        slotData.forEach((card) => {
+                            const numberEl = document.createElement('div');
+                            numberEl.className = `temp-number theme-${card.color}`;
+                            numberEl.textContent = card.num;
+                            newSlot.appendChild(numberEl);
+                        });
+                    } else {
+                        // Три и более карт - показываем верхнюю, пустую с индикатором, и нижнюю
+                        const topCard = slotData[slotData.length - 1];
+                        const bottomCard = slotData[0];
+                        const middleCount = slotData.length - 2;
+                        
+                        // Верхняя карта
+                        const topEl = document.createElement('div');
+                        topEl.className = `temp-number theme-${topCard.color}`;
+                        topEl.textContent = topCard.num;
+                        newSlot.appendChild(topEl);
+                        
+                        // Средняя пустая карта с индикатором
+                        const middleEl = document.createElement('div');
+                        middleEl.className = `temp-middle-card theme-${topCard.color}`;
+                        
+                        const indicator = document.createElement('div');
+                        indicator.className = 'middle-card-indicator';
+                        indicator.textContent = middleCount;
+                        middleEl.appendChild(indicator);
+                        
+                        newSlot.appendChild(middleEl);
+                        
+                        // Нижняя карта
+                        const bottomEl = document.createElement('div');
+                        bottomEl.className = `temp-number theme-${bottomCard.color}`;
+                        bottomEl.textContent = bottomCard.num;
+                        newSlot.appendChild(bottomEl);
+                    }
+                } else {
+                    // Empty slot - not draggable but can be drop target
+                    newSlot.draggable = false;
+                    delete newSlot.dataset.dragType;
+                }
+                
+                // Добавляем новый обработчик
+                newSlot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleTempSlotClick(index);
+                });
+            });
+        }
+        
+        function canAddToSlotStack(card, slotIndex) {
+            const slotData = gameState.tempSlots[slotIndex];
+            if (slotData.length === 0) return true;
+            
+            // Проверяем, можно ли добавить к верхней карте
+            const topCard = slotData[slotData.length - 1];
+            const canAddToTop = card.color === topCard.color && 
+                               (card.num === topCard.num + 1 || card.num === topCard.num - 1);
+            
+            // Проверяем, можно ли добавить к нижней карте
+            const bottomCard = slotData[0];
+            const canAddToBottom = card.color === bottomCard.color && 
+                                  (card.num === bottomCard.num + 1 || card.num === bottomCard.num - 1);
+            
+            return canAddToTop || canAddToBottom;
+        }
+        
+        function addCardToSlotStack(card, slotIndex) {
+            const slotData = gameState.tempSlots[slotIndex];
+            
+            if (slotData.length === 0) {
+                slotData.push(card);
+                return;
+            }
+            
+            const topCard = slotData[slotData.length - 1];
+            const bottomCard = slotData[0];
+            
+            // Определяем, куда добавить карту
+            const canAddToTop = card.color === topCard.color && 
+                               (card.num === topCard.num + 1 || card.num === topCard.num - 1);
+            const canAddToBottom = card.color === bottomCard.color && 
+                                  (card.num === bottomCard.num + 1 || card.num === bottomCard.num - 1);
+            
+            if (canAddToTop) {
+                slotData.push(card);
+            } else if (canAddToBottom) {
+                slotData.unshift(card);
+            }
+        }
+        
+        function handleCollectionStackClick(color) {
+            if (gameState.selected && gameState.selected.type === 'temp') {
+                const slotIndex = gameState.selected.data;
+                const slotData = gameState.tempSlots[slotIndex];
+                
+                if (slotData.length > 0 && canAddSlotStackToCollection(slotData, color)) {
+                    addSlotStackToCollection(slotIndex, color);
+                } else {
+                    showMessage('❌ Колода не подходит к коллекции');
+                    clearSelection();
+                }
+            }
+        }
+        
+        function canAddSlotStackToCollection(slotData, color) {
+            if (slotData.length === 0 || slotData[0].color !== color) return false;
+            
+            const collection = gameState.collections[color];
+            
+            // Для одиночной карты
+            if (slotData.length === 1) {
+                return canAddToCollection(slotData[0].num, color);
+            }
+            
+            // Получаем числа из слота
+            const slotNumbers = slotData.map(card => card.num);
+            
+            if (collection.length === 0) {
+                // Можем начать коллекцию с любого конца последовательности
+                const minNum = Math.min(...slotNumbers);
+                const maxNum = Math.max(...slotNumbers);
+                return minNum === 1 || maxNum === gameState.maxNumber;
+            }
+            
+            const lastInCollection = collection[collection.length - 1];
+            const minSlotNum = Math.min(...slotNumbers);
+            const maxSlotNum = Math.max(...slotNumbers);
+            
+            if (collection[0] === 1) {
+                // Коллекция возрастающая - нужен минимальный номер из слота = последний + 1
+                return minSlotNum === lastInCollection + 1;
+            } else {
+                // Коллекция убывающая - нужен максимальный номер из слота = последний - 1
+                return maxSlotNum === lastInCollection - 1;
+            }
+        }
+        
+        function addSlotStackToCollection(slotIndex, color) {
+            saveState();
+            
+            const slotData = gameState.tempSlots[slotIndex];
+            const collection = gameState.collections[color];
+            const slotNumbers = slotData.map(card => card.num).sort((a, b) => a - b);
+            
+            if (collection.length === 0) {
+                // Начинаем новую коллекцию
+                if (slotNumbers[0] === 1) {
+                    // Начинаем с 1 (возрастающая)
+                    gameState.collections[color] = [...slotNumbers];
+                } else {
+                    // Начинаем с максимального числа (убывающая)
+                    gameState.collections[color] = [...slotNumbers.reverse()];
+                }
+            } else {
+                // Добавляем к существующей коллекции
+                if (collection[0] === 1) {
+                    // Возрастающая коллекция - добавляем числа по возрастанию
+                    slotNumbers.forEach(num => {
+                        gameState.collections[color].push(num);
+                    });
+                } else {
+                    // Убывающая коллекция - добавляем числа по убыванию
+                    slotNumbers.reverse().forEach(num => {
+                        gameState.collections[color].push(num);
+                    });
+                }
+            }
+            
+            gameState.tempSlots[slotIndex] = [];
+            gameState.moves++;
+            clearSelection();
+            updateDisplay();
+            showMessage(`✅ Мини-колода добавлена в коллекцию!`);
+            checkWin();
+        }
+
+        function handleCellClick(row, col) {
+            // Запускаем таймер при первом ходе
+            startTimer();
+            
+            const cellData = gameState.grid[row][col];
+            
+            if (gameState.selected) {
+                if (cellData.stack.length === 0 && gameState.selected.type === 'grid') {
+                    moveToEmptyCell(row, col);
+                    return;
+                } else if (cellData.stack.length === 0 && gameState.selected.type === 'temp') {
+                    moveFromTempToEmptyCell(row, col);
+                    return;
+                }
+                clearSelection();
+                return;
+            }
+            
+            if (cellData.state === 'blocked' || cellData.stack.length === 0) {
+                return;
+            }
+            
+            const topCard = cellData.stack[cellData.stack.length - 1];
+            
+            const canCollect = canAddToCollection(topCard.num, topCard.color);
+            if (canCollect) {
+                collectNumber(row, col);
+            } else {
+                selectCell({row, col}, 'grid');
+                highlightDropTargets();
+            }
+        }
+        
+        function moveToEmptyCell(targetRow, targetCol) {
+            if (!gameState.selected || gameState.selected.type !== 'grid') return;
+            
+            saveState();
+            
+            const sourceRow = gameState.selected.data.row;
+            const sourceCol = gameState.selected.data.col;
+            const sourceCell = gameState.grid[sourceRow][sourceCol];
+            const targetCell = gameState.grid[targetRow][targetCol];
+            
+            const topCard = sourceCell.stack.pop();
+            targetCell.stack.push(topCard);
+            targetCell.state = 'unlocked';
+            
+            if (sourceCell.stack.length === 0) {
+                unlockCellsAbove(sourceRow, sourceCol);
+            }
+            
+            unlockAdjacentCells(targetRow, targetCol);
+            unlockAdjacentCells(sourceRow, sourceCol);
+            
+            gameState.moves++;
+            clearSelection();
+            clearDropTargets();
+            updateDisplay();
+        }
+        
+        function moveFromTempToEmptyCell(targetRow, targetCol) {
+            if (!gameState.selected || gameState.selected.type !== 'temp') return;
+            
+            const slotIndex = gameState.selected.data;
+            const slotData = gameState.tempSlots[slotIndex];
+            
+            // Можно переместить обратно на поле только если в слоте одна карта
+            if (slotData.length !== 1) {
+                showMessage('❌ Мини-колоду нельзя вернуть на поле');
+                clearSelection();
+                clearDropTargets();
+                return;
+            }
+            
+            saveState();
+            
+            const topCard = slotData.pop();
+            const targetCell = gameState.grid[targetRow][targetCol];
+            
+            targetCell.stack.push(topCard);
+            targetCell.state = 'unlocked';
+            
+            unlockAdjacentCells(targetRow, targetCol);
+            
+            gameState.moves++;
+            clearSelection();
+            clearDropTargets();
+            updateDisplay();
+        }
+        
+        function highlightDropTargets() {
+            for (let row = 0; row < gameState.gridSize.rows; row++) {
+                for (let col = 0; col < gameState.gridSize.cols; col++) {
+                    if (gameState.grid[row][col].stack.length === 0) {
+                        const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                        if (cell) cell.classList.add('drop-target');
+                    }
+                }
+            }
+        }
+        
+        function clearDropTargets() {
+            document.querySelectorAll('.drop-target').forEach(cell => {
+                cell.classList.remove('drop-target');
+            });
+        }
+
+        function handleCollectionClick(color, num) {
+            if (gameState.selected) {
+                clearSelection();
+                return;
+            }
+            
+            const collection = gameState.collections[color];
+            if (collection.length > 0 && collection[collection.length - 1] === num) {
+                selectCell({color, num}, 'collection');
+            }
+        }
+
+        function handleTempSlotClick(slotIndex) {
+            if (gameState.selected) {
+                if (gameState.selected.type === 'grid') {
+                    // Перемещение с поля в слот
+                    const {row, col} = gameState.selected.data;
+                    const cellData = gameState.grid[row][col];
+                    const topCard = cellData.stack[cellData.stack.length - 1];
+                    
+                    if (canAddToSlotStack(topCard, slotIndex)) {
+                        saveState();
+                        
+                        const card = cellData.stack.pop();
+                        addCardToSlotStack(card, slotIndex);
+                        
+                        if (cellData.stack.length === 0) {
+                            unlockCellsAbove(row, col);
+                        }
+                        unlockAdjacentCells(row, col);
+                        
+                        gameState.moves++;
+                        clearSelection();
+                        updateDisplay();
+                        
+                        const slotData = gameState.tempSlots[slotIndex];
+                        if (slotData.length === 2) {
+                            showMessage(`Создана мини-колода: ${slotData[0].num}-${slotData[slotData.length - 1].num}`);
+                        } else {
+                            showMessage(`Добавлено в Stack ${slotIndex + 1}`);
+                        }
+                    } else {
+                        showMessage('❌ Карта не подходит к этому стеку');
+                        clearSelection();
+                    }
+                } else if (gameState.selected.type === 'collection') {
+                    // Перемещение из коллекции в слот
+                    const {color, num} = gameState.selected.data;
+                    const card = {num, color};
+                    
+                    if (canAddToSlotStack(card, slotIndex)) {
+                        saveState();
+                        gameState.collections[color].pop();
+                        addCardToSlotStack(card, slotIndex);
+                        gameState.moves++;
+                        clearSelection();
+                        updateDisplay();
+                    }
+                } else if (gameState.selected.type === 'temp' && gameState.selected.data !== slotIndex) {
+                    // Перемещение между слотами
+                    const sourceSlotIndex = gameState.selected.data;
+                    const sourceSlotData = gameState.tempSlots[sourceSlotIndex];
+                    
+                    if (canMergeStacks(sourceSlotData, slotIndex)) {
+                        mergeStacks(sourceSlotIndex, slotIndex);
+                    } else {
+                        showMessage('❌ Стеки нельзя объединить');
+                        clearSelection();
+                        clearDropTargets();
+                    }
+                }
+            } else {
+                if (gameState.tempSlots[slotIndex].length > 0) {
+                    selectCell(slotIndex, 'temp');
+                    highlightDropTargets();
+                }
+            }
+        }
+
+        function selectCell(data, type) {
+            clearSelection();
+            gameState.selected = { data, type };
+            
+            if (type === 'grid') {
+                const cell = document.querySelector(`[data-row="${data.row}"][data-col="${data.col}"]`);
+                if (cell) cell.classList.add('selected');
+            } else if (type === 'temp') {
+                const slots = document.querySelectorAll('.temp-slot');
+                if (slots[data]) slots[data].classList.add('selected');
+            }
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            clearDropTargets();
+            gameState.selected = null;
+        }
+
+        function canAddToCollection(num, color) {
+            const collection = gameState.collections[color];
+            
+            if (collection.length === 0) {
+                return num === 1 || num === gameState.maxNumber;
+            }
+            
+            const lastNum = collection[collection.length - 1];
+            
+            if (collection[0] === 1) {
+                return num === lastNum + 1 && num <= gameState.maxNumber;
+            }
+            
+            if (collection[0] === gameState.maxNumber) {
+                return num === lastNum - 1 && num >= 1;
+            }
+            
+            return false;
+        }
+
+        function collectNumber(row, col) {
+            saveState();
+            
+            const cellData = gameState.grid[row][col];
+            const topCard = cellData.stack.pop();
+            
+            gameState.collections[topCard.color].push(topCard.num);
+            
+            if (cellData.stack.length === 0) {
+                unlockCellsAbove(row, col);
+            }
+            
+            unlockAdjacentCells(row, col);
+            
+            gameState.moves++;
+            updateDisplay();
+            
+            showMessage(`Собрано: ${topCard.num} (${topCard.color})`);
+            
+            checkWin();
+        }
+
+        function unlockAdjacentCells(row, col) {
+            const directions = [[-1,0], [1,0], [0,-1], [0,1]];
+            
+            directions.forEach(([dr, dc]) => {
+                const newRow = row + dr;
+                const newCol = col + dc;
+                
+                if (newRow >= 0 && newRow < gameState.gridSize.rows && 
+                    newCol >= 0 && newCol < gameState.gridSize.cols) {
+                    
+                    const cell = gameState.grid[newRow][newCol];
+                    if (cell.state === 'blocked' && cell.stack.length > 0) {
+                        cell.state = 'unlocked';
+                    }
+                }
+            });
+        }
+        
+        function unlockCellsAbove(row, col) {
+            if (row > 0) {
+                const cellAbove = gameState.grid[row - 1][col];
+                if (cellAbove.state === 'blocked' && cellAbove.stack.length > 0) {
+                    cellAbove.state = 'unlocked';
+                }
+            }
+        }
+
+        function checkWin() {
+            const allComplete = colors.every(color => {
+                const collection = gameState.collections[color];
+                return collection.length === gameState.maxNumber;
+            });
+            
+            if (allComplete) {
+                stopTimer();
+                const timeInSeconds = Math.floor((Date.now() - gameState.startTime) / 1000);
+                
+                setTimeout(() => {
+                    showVictoryModal(timeInSeconds, gameState.moves, gameState.difficulty);
+                }, 500);
+            }
+        }
+
+        function showMessage(text) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.classList.add('show');
+            
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+
+        function shuffleCards() {
+            saveState();
+            
+            // Собираем все карты с поля
+            const allCards = [];
+            for (let row = 0; row < gameState.gridSize.rows; row++) {
+                for (let col = 0; col < gameState.gridSize.cols; col++) {
+                    const cell = gameState.grid[row][col];
+                    while (cell.stack.length > 0) {
+                        allCards.push(cell.stack.pop());
+                    }
+                }
+            }
+            
+            // Если карт нет, ничего не делаем
+            if (allCards.length === 0) {
+                showMessage('❌ Нет карт для перемешивания');
+                return;
+            }
+            
+            // Перемешиваем
+            for (let i = allCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allCards[i], allCards[j]] = [allCards[j], allCards[i]];
+            }
+            
+            // Сначала сбрасываем состояние всех ячеек
+            for (let row = 0; row < gameState.gridSize.rows; row++) {
+                for (let col = 0; col < gameState.gridSize.cols; col++) {
+                    gameState.grid[row][col].state = 'blocked';
+                    gameState.grid[row][col].stack = [];
+                }
+            }
+            
+            // Распределяем карты обратно
+            let cardIndex = 0;
+            for (let row = 0; row < gameState.gridSize.rows; row++) {
+                for (let col = 0; col < gameState.gridSize.cols; col++) {
+                    if (cardIndex < allCards.length) {
+                        const stackSize = Math.min(
+                            Math.floor(Math.random() * 3) + 1,
+                            allCards.length - cardIndex
+                        );
+                        
+                        for (let i = 0; i < stackSize; i++) {
+                            gameState.grid[row][col].stack.push(allCards[cardIndex++]);
+                        }
+                    }
+                }
+            }
+            
+            // Распределяем оставшиеся карты
+            while (cardIndex < allCards.length) {
+                const row = Math.floor(Math.random() * gameState.gridSize.rows);
+                const col = Math.floor(Math.random() * gameState.gridSize.cols);
+                if (gameState.grid[row][col].stack.length < 5) {
+                    gameState.grid[row][col].stack.push(allCards[cardIndex++]);
+                }
+            }
+            
+            // Находим самый нижний ряд с картами и разблокируем его + все ряды ниже
+            let bottomRowWithCards = -1;
+            for (let row = gameState.gridSize.rows - 1; row >= 0; row--) {
+                let hasCards = false;
+                for (let col = 0; col < gameState.gridSize.cols; col++) {
+                    if (gameState.grid[row][col].stack.length > 0) {
+                        hasCards = true;
+                        break;
+                    }
+                }
+                if (hasCards) {
+                    bottomRowWithCards = row;
+                    break;
+                }
+            }
+            
+            // Разблокируем все ряды от найденного нижнего ряда до самого низа
+            if (bottomRowWithCards !== -1) {
+                for (let row = bottomRowWithCards; row < gameState.gridSize.rows; row++) {
+                    for (let col = 0; col < gameState.gridSize.cols; col++) {
+                        if (gameState.grid[row][col].stack.length > 0) {
+                            gameState.grid[row][col].state = 'unlocked';
+                        }
+                    }
+                }
+            }
+            
+            // Добавляем +10 ходов за shuffle
+            gameState.moves += 10;
+            clearSelection();
+            updateDisplay();
+            showMessage('🔀 Карты перемешаны! (+10 ходов)');
+        }
+        
+        // Drag and Drop functionality
+        let draggedElement = null;
+        let draggedData = null;
+        
+        function handleDragStart(event) {
+            const target = event.target.closest('.cell, .temp-slot, .collection-number');
+            if (!target) return;
+            
+            startTimer(); // Start timer on first interaction
+            
+            // Prevent default to avoid text selection
+            event.preventDefault();
+            
+            draggedElement = target;
+            
+            if (target.classList.contains('cell')) {
+                const row = parseInt(target.dataset.row);
+                const col = parseInt(target.dataset.col);
+                const cellData = gameState.grid[row][col];
+                
+                if (cellData.state !== 'unlocked' || cellData.stack.length === 0) {
+                    return;
+                }
+                
+                const topCard = cellData.stack[cellData.stack.length - 1];
+                draggedData = {
+                    type: 'grid',
+                    row: row,
+                    col: col,
+                    card: topCard
+                };
+                
+                target.classList.add('dragging');
+                
+            } else if (target.classList.contains('temp-slot')) {
+                const slotIndex = parseInt(target.dataset.slot);
+                const slotData = gameState.tempSlots[slotIndex];
+                
+                if (!slotData || slotData.length === 0) {
+                    return;
+                }
+                
+                draggedData = {
+                    type: 'temp',
+                    slotIndex: slotIndex,
+                    slotData: slotData
+                };
+                
+                target.classList.add('dragging');
+                
+            } else if (target.classList.contains('collection-number')) {
+                const stack = target.closest('.collection-stack');
+                const color = stack.dataset.color;
+                const num = parseInt(target.textContent);
+                const collection = gameState.collections[color];
+                
+                // Only allow dragging the last (topmost) number
+                if (collection[collection.length - 1] !== num) {
+                    return;
+                }
+                
+                draggedData = {
+                    type: 'collection',
+                    color: color,
+                    num: num
+                };
+                
+                target.classList.add('dragging');
+            }
+            
+            // Set drag data for better mobile support
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', '');
+            
+            // Add a small delay for mobile to show drag feedback
+            setTimeout(() => {
+                if (draggedElement) {
+                    draggedElement.style.opacity = '0.5';
+                }
+            }, 50);
+        }
+        
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            
+            // Clear all existing hover states first
+            document.querySelectorAll('.drag-hover').forEach(el => {
+                el.classList.remove('drag-hover');
+            });
+            
+            const target = event.target.closest('.cell, .temp-slot, .collection-stack');
+            if (target && draggedData) {
+                // Add visual feedback only to current target
+                if (isValidDropTarget(target, draggedData)) {
+                    target.classList.add('drag-hover');
+                }
+            }
+        }
+        
+        function handleDrop(event) {
+            event.preventDefault();
+            
+            const target = event.target.closest('.cell, .temp-slot, .collection-stack');
+            if (!target || !draggedData) return;
+            
+            // Remove visual feedback
+            document.querySelectorAll('.drag-hover').forEach(el => {
+                el.classList.remove('drag-hover');
+            });
+            
+            if (draggedElement) {
+                draggedElement.classList.remove('dragging');
+            }
+            
+            if (isValidDropTarget(target, draggedData)) {
+                performDrop(target, draggedData);
+            } else {
+                showMessage('❌ Недопустимое перемещение');
+            }
+            
+            draggedElement = null;
+            draggedData = null;
+        }
+        
+        function isValidDropTarget(target, dragData) {
+            if (target.classList.contains('cell')) {
+                const row = parseInt(target.dataset.row);
+                const col = parseInt(target.dataset.col);
+                const cellData = gameState.grid[row][col];
+                
+                // Can drop on empty cells
+                return cellData.stack.length === 0;
+                
+            } else if (target.classList.contains('temp-slot')) {
+                const slotIndex = parseInt(target.dataset.slot);
+                
+                if (dragData.type === 'grid') {
+                    return canAddToSlotStack(dragData.card, slotIndex);
+                } else if (dragData.type === 'collection') {
+                    const card = { num: dragData.num, color: dragData.color };
+                    return canAddToSlotStack(card, slotIndex);
+                } else if (dragData.type === 'temp') {
+                    // Allow temp-to-temp moves (different slots)
+                    return slotIndex !== dragData.slotIndex && canMergeStacks(dragData.slotData, slotIndex);
+                }
+                
+            } else if (target.classList.contains('collection-stack')) {
+                const color = target.dataset.color;
+                
+                if (dragData.type === 'grid') {
+                    return canAddToCollection(dragData.card.num, color) && dragData.card.color === color;
+                } else if (dragData.type === 'temp') {
+                    return canAddSlotStackToCollection(dragData.slotData, color);
+                }
+            }
+            
+            return false;
+        }
+        
+        function performDrop(target, dragData) {
+            if (target.classList.contains('cell')) {
+                const row = parseInt(target.dataset.row);
+                const col = parseInt(target.dataset.col);
+                
+                if (dragData.type === 'grid') {
+                    // Set the selected state to match the dragged data
+                    gameState.selected = {
+                        data: { row: dragData.row, col: dragData.col },
+                        type: 'grid'
+                    };
+                    moveToEmptyCell(row, col);
+                } else if (dragData.type === 'temp') {
+                    // Set the selected state to match the dragged data
+                    gameState.selected = {
+                        data: dragData.slotIndex,
+                        type: 'temp'
+                    };
+                    moveFromTempToEmptyCell(row, col);
+                }
+                
+            } else if (target.classList.contains('temp-slot')) {
+                const slotIndex = parseInt(target.dataset.slot);
+                
+                if (dragData.type === 'grid') {
+                    // Move from grid to temp slot
+                    const cellData = gameState.grid[dragData.row][dragData.col];
+                    const topCard = cellData.stack[cellData.stack.length - 1];
+                    
+                    if (canAddToSlotStack(topCard, slotIndex)) {
+                        saveState();
+                        
+                        const card = cellData.stack.pop();
+                        addCardToSlotStack(card, slotIndex);
+                        
+                        if (cellData.stack.length === 0) {
+                            unlockCellsAbove(dragData.row, dragData.col);
+                        }
+                        unlockAdjacentCells(dragData.row, dragData.col);
+                        
+                        gameState.moves++;
+                        updateDisplay();
+                        
+                        const slotData = gameState.tempSlots[slotIndex];
+                        if (slotData.length === 2) {
+                            showMessage(`Создана мини-колода: ${slotData[0].num}-${slotData[slotData.length - 1].num}`);
+                        } else {
+                            showMessage(`Добавлено в Stack ${slotIndex + 1}`);
+                        }
+                    }
+                } else if (dragData.type === 'collection') {
+                    // Move from collection to temp slot
+                    const card = { num: dragData.num, color: dragData.color };
+                    
+                    if (canAddToSlotStack(card, slotIndex)) {
+                        saveState();
+                        gameState.collections[dragData.color].pop();
+                        addCardToSlotStack(card, slotIndex);
+                        gameState.moves++;
+                        updateDisplay();
+                        showMessage(`Перемещено в Stack ${slotIndex + 1}`);
+                    }
+                } else if (dragData.type === 'temp') {
+                    // Move from temp slot to temp slot (merge stacks)
+                    if (slotIndex !== dragData.slotIndex && canMergeStacks(dragData.slotData, slotIndex)) {
+                        mergeStacks(dragData.slotIndex, slotIndex);
+                    }
+                }
+                
+            } else if (target.classList.contains('collection-stack')) {
+                const color = target.dataset.color;
+                
+                if (dragData.type === 'grid') {
+                    // Collect from grid to collection
+                    if (canAddToCollection(dragData.card.num, color) && dragData.card.color === color) {
+                        collectNumber(dragData.row, dragData.col);
+                    }
+                } else if (dragData.type === 'temp') {
+                    // Move temp slot stack to collection
+                    if (canAddSlotStackToCollection(dragData.slotData, color)) {
+                        addSlotStackToCollection(dragData.slotIndex, color);
+                    }
+                }
+            }
+        }
+        
+        document.addEventListener('dragend', function(event) {
+            // Clean up dragging states
+            document.querySelectorAll('.dragging, .drag-hover').forEach(el => {
+                el.classList.remove('dragging', 'drag-hover');
+                el.style.opacity = '';
+            });
+            
+            draggedElement = null;
+            draggedData = null;
+        });
+        
+        // Add dragenter and dragleave events for better highlight management
+        document.addEventListener('dragenter', function(event) {
+            const target = event.target.closest('.cell, .temp-slot, .collection-stack');
+            if (target && draggedData && isValidDropTarget(target, draggedData)) {
+                target.classList.add('drag-hover');
+            }
+        });
+        
+        document.addEventListener('dragleave', function(event) {
+            const target = event.target.closest('.cell, .temp-slot, .collection-stack');
+            if (target) {
+                // Only remove highlight if we're actually leaving the element
+                const rect = target.getBoundingClientRect();
+                const x = event.clientX;
+                const y = event.clientY;
+                
+                if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+                    target.classList.remove('drag-hover');
+                }
+            }
+        });
+        
+        // Stack merging functionality
+        function canMergeStacks(sourceStack, targetSlotIndex) {
+            if (sourceStack.length === 0) return false;
+            
+            const targetStack = gameState.tempSlots[targetSlotIndex];
+            
+            // If target slot is empty, can always move there
+            if (targetStack.length === 0) return true;
+            
+            // Check if stacks can be merged
+            const sourceColor = sourceStack[0].color;
+            const targetColor = targetStack[0].color;
+            
+            // Must be same color
+            if (sourceColor !== targetColor) return false;
+            
+            // Get the range of numbers in each stack
+            const sourceNumbers = sourceStack.map(card => card.num).sort((a, b) => a - b);
+            const targetNumbers = targetStack.map(card => card.num).sort((a, b) => a - b);
+            
+            const sourceMin = sourceNumbers[0];
+            const sourceMax = sourceNumbers[sourceNumbers.length - 1];
+            const targetMin = targetNumbers[0];
+            const targetMax = targetNumbers[targetNumbers.length - 1];
+            
+            // Check if ranges can connect
+            // Source can connect to bottom of target
+            const canConnectToBottom = sourceMax === targetMin - 1;
+            // Source can connect to top of target
+            const canConnectToTop = sourceMin === targetMax + 1;
+            // Target can connect to bottom of source
+            const targetCanConnectToBottom = targetMax === sourceMin - 1;
+            // Target can connect to top of source
+            const targetCanConnectToTop = targetMin === sourceMax + 1;
+            
+            return canConnectToBottom || canConnectToTop || targetCanConnectToBottom || targetCanConnectToTop;
+        }
+        
+        function mergeStacks(sourceSlotIndex, targetSlotIndex) {
+            saveState();
+            
+            const sourceStack = gameState.tempSlots[sourceSlotIndex];
+            const targetStack = gameState.tempSlots[targetSlotIndex];
+            
+            if (targetStack.length === 0) {
+                // Simple move to empty slot
+                gameState.tempSlots[targetSlotIndex] = [...sourceStack];
+                gameState.tempSlots[sourceSlotIndex] = [];
+                
+                gameState.moves++;
+                clearSelection();
+                updateDisplay();
+                showMessage(`🔄 Стек перемещен в Stack ${targetSlotIndex + 1}`);
+                return;
+            }
+            
+            // Get sorted numbers for determining merge order
+            const sourceNumbers = sourceStack.map(card => card.num).sort((a, b) => a - b);
+            const targetNumbers = targetStack.map(card => card.num).sort((a, b) => a - b);
+            
+            const sourceMin = sourceNumbers[0];
+            const sourceMax = sourceNumbers[sourceNumbers.length - 1];
+            const targetMin = targetNumbers[0];
+            const targetMax = targetNumbers[targetNumbers.length - 1];
+            
+            let mergedStack = [];
+            let mergeDescription = '';
+            
+            if (sourceMax === targetMin - 1) {
+                // Source connects to bottom of target: [source][target]
+                mergedStack = [...sourceStack, ...targetStack];
+                mergeDescription = `${sourceMin}-${targetMax}`;
+            } else if (sourceMin === targetMax + 1) {
+                // Source connects to top of target: [target][source]
+                mergedStack = [...targetStack, ...sourceStack];
+                mergeDescription = `${targetMin}-${sourceMax}`;
+            } else if (targetMax === sourceMin - 1) {
+                // Target connects to bottom of source: [target][source]
+                mergedStack = [...targetStack, ...sourceStack];
+                mergeDescription = `${targetMin}-${sourceMax}`;
+            } else if (targetMin === sourceMax + 1) {
+                // Target connects to top of source: [source][target]
+                mergedStack = [...sourceStack, ...targetStack];
+                mergeDescription = `${sourceMin}-${targetMax}`;
+            }
+            
+            // Update stacks
+            gameState.tempSlots[targetSlotIndex] = mergedStack;
+            gameState.tempSlots[sourceSlotIndex] = [];
+            
+            gameState.moves++;
+            clearSelection();
+            updateDisplay();
+            showMessage(`🔗 Стеки объединены: ${mergeDescription} в Stack ${targetSlotIndex + 1}`);
+        }
+
+        // Add touch event handlers for better mobile experience
+        document.addEventListener('touchstart', function(e) {
+            const target = e.target.closest('.cell, .temp-slot, .collection-number');
+            if (target && target.draggable) {
+                // Prevent scrolling when touching draggable elements
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        document.addEventListener('touchmove', function(e) {
+            if (draggedElement) {
+                // Prevent scrolling during drag
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
