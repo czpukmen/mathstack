@@ -41,7 +41,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            touch-action: none;
+            touch-action: manipulation;
             overflow: hidden;
             position: fixed;
             width: 100%;
@@ -1215,6 +1215,29 @@
             
             .cell.unlocked:active {
                 box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+            }
+            
+            /* Ensure draggable elements are properly styled for touch */
+            .cell[draggable="true"],
+            .temp-slot[draggable="true"],
+            .collection-number {
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                touch-action: manipulation;
+            }
+            
+            /* Visual feedback for touch dragging */
+            .cell.dragging,
+            .temp-slot.dragging,
+            .collection-number.dragging {
+                opacity: 0.5 !important;
+                transform: scale(0.95) !important;
+                z-index: 1000 !important;
+                pointer-events: none;
             }
         }
     </style>
@@ -2857,20 +2880,175 @@
         }
 
         // Add touch event handlers for better mobile experience
+        let touchStartTime = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isDragging = false;
+        let touchDraggedElement = null;
+        let touchDragData = null;
+        
         document.addEventListener('touchstart', function(e) {
             const target = e.target.closest('.cell, .temp-slot, .collection-number');
-            if (target && target.draggable) {
-                // Prevent scrolling when touching draggable elements
-                e.preventDefault();
-            }
+            if (!target || !target.draggable) return;
+            
+            touchStartTime = Date.now();
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            isDragging = false;
+            touchDraggedElement = target;
+            
+            // Prevent default only for draggable elements
+            e.preventDefault();
         }, { passive: false });
         
         document.addEventListener('touchmove', function(e) {
-            if (draggedElement) {
-                // Prevent scrolling during drag
+            if (!touchDraggedElement) return;
+            
+            const touch = e.touches[0];
+            const deltaX = Math.abs(touch.clientX - touchStartX);
+            const deltaY = Math.abs(touch.clientY - touchStartY);
+            const deltaTime = Date.now() - touchStartTime;
+            
+            // Start dragging after a small movement or time threshold
+            if (!isDragging && (deltaX > 10 || deltaY > 10 || deltaTime > 200)) {
+                isDragging = true;
+                
+                // Initialize drag data similar to handleDragStart
+                if (touchDraggedElement.classList.contains('cell')) {
+                    const row = parseInt(touchDraggedElement.dataset.row);
+                    const col = parseInt(touchDraggedElement.dataset.col);
+                    const cellData = gameState.grid[row][col];
+                    
+                    if (cellData.state === 'unlocked' && cellData.stack.length > 0) {
+                        const topCard = cellData.stack[cellData.stack.length - 1];
+                        touchDragData = {
+                            type: 'grid',
+                            row: row,
+                            col: col,
+                            card: topCard
+                        };
+                        touchDraggedElement.classList.add('dragging');
+                    }
+                } else if (touchDraggedElement.classList.contains('temp-slot')) {
+                    const slotIndex = parseInt(touchDraggedElement.dataset.slot);
+                    const slotData = gameState.tempSlots[slotIndex];
+                    
+                    if (slotData && slotData.length > 0) {
+                        touchDragData = {
+                            type: 'temp',
+                            slotIndex: slotIndex,
+                            slotData: slotData
+                        };
+                        touchDraggedElement.classList.add('dragging');
+                    }
+                } else if (touchDraggedElement.classList.contains('collection-number')) {
+                    const stack = touchDraggedElement.closest('.collection-stack');
+                    const color = stack.dataset.color;
+                    const num = parseInt(touchDraggedElement.textContent);
+                    const collection = gameState.collections[color];
+                    
+                    if (collection[collection.length - 1] === num) {
+                        touchDragData = {
+                            type: 'collection',
+                            color: color,
+                            num: num
+                        };
+                        touchDraggedElement.classList.add('dragging');
+                    }
+                }
+            }
+            
+            if (isDragging) {
                 e.preventDefault();
+                
+                // Update drag visual feedback
+                if (touchDraggedElement) {
+                    touchDraggedElement.style.opacity = '0.5';
+                    touchDraggedElement.style.transform = 'scale(0.95)';
+                }
+                
+                // Find drop target under touch point
+                const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+                const dropTarget = elementUnderTouch?.closest('.cell, .temp-slot, .collection-stack');
+                
+                // Clear previous hover states
+                document.querySelectorAll('.drag-hover').forEach(el => {
+                    el.classList.remove('drag-hover');
+                });
+                
+                // Add hover state to current target
+                if (dropTarget && touchDragData && isValidDropTarget(dropTarget, touchDragData)) {
+                    dropTarget.classList.add('drag-hover');
+                }
             }
         }, { passive: false });
+        
+        document.addEventListener('touchend', function(e) {
+            if (!isDragging || !touchDraggedElement || !touchDragData) {
+                // Handle tap events for non-drag interactions
+                const target = e.target.closest('.cell, .temp-slot, .collection-stack, .collection-number');
+                if (target && !isDragging) {
+                    handleTapEvent(target, e);
+                }
+                
+                // Reset touch state
+                touchDraggedElement = null;
+                touchDragData = null;
+                isDragging = false;
+                return;
+            }
+            
+            const touch = e.changedTouches[0];
+            const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+            const dropTarget = elementUnderTouch?.closest('.cell, .temp-slot, .collection-stack');
+            
+            // Clean up visual states
+            if (touchDraggedElement) {
+                touchDraggedElement.classList.remove('dragging');
+                touchDraggedElement.style.opacity = '';
+                touchDraggedElement.style.transform = '';
+            }
+            
+            document.querySelectorAll('.drag-hover').forEach(el => {
+                el.classList.remove('drag-hover');
+            });
+            
+            // Perform drop if valid target
+            if (dropTarget && isValidDropTarget(dropTarget, touchDragData)) {
+                performDrop(dropTarget, touchDragData);
+            } else if (isDragging) {
+                showMessage('❌ Недопустимое перемещение');
+            }
+            
+            // Reset touch state
+            touchDraggedElement = null;
+            touchDragData = null;
+            isDragging = false;
+        }, { passive: false });
+        
+        // Handle tap events for non-drag interactions
+        function handleTapEvent(target, event) {
+            event.preventDefault();
+            
+            if (target.classList.contains('cell')) {
+                const row = parseInt(target.dataset.row);
+                const col = parseInt(target.dataset.col);
+                handleCellClick(row, col);
+            } else if (target.classList.contains('temp-slot')) {
+                const slotIndex = parseInt(target.dataset.slot);
+                handleTempSlotClick(slotIndex);
+            } else if (target.classList.contains('collection-stack')) {
+                const color = target.dataset.color;
+                if (gameState.selected && gameState.selected.type === 'temp') {
+                    handleCollectionStackClick(color);
+                }
+            } else if (target.classList.contains('collection-number')) {
+                const stack = target.closest('.collection-stack');
+                const color = stack.dataset.color;
+                const num = parseInt(target.textContent);
+                handleCollectionClick(color, num);
+            }
+        }
         
         // Prevent zoom on double tap
         let lastTouchEnd = 0;
