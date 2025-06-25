@@ -169,19 +169,22 @@
             position: absolute;
             top: 0;
             right: 0;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            border-radius: 8px;
-            padding: 8px;
+            background: #1a1a2e;
+            border: 2px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 8px 12px;
             cursor: pointer;
             color: #fff;
-            font-size: 18px;
+            font-size: 22px;
+            box-shadow: 0 2px 12px rgba(78,205,196,0.10);
             transition: all 0.3s ease;
+            outline: none;
         }
         
         .menu-burger:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.1);
+            background: rgba(78,205,196,0.08);
+            border-color: #4ecdc4;
+            transform: scale(1.08);
         }
         
         .menu-dropdown {
@@ -227,27 +230,12 @@
         }
         
         .menu-item.submenu {
-            position: relative;
+            /* Remove submenu context menu styling */
+            position: static;
         }
         
         .submenu-content {
-            position: absolute;
-            left: 100%;
-            top: 0;
-            background: #2a2a3e;
-            border-radius: 8px;
-            min-width: 150px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-10px);
-            transition: all 0.3s ease;
-        }
-        
-        .submenu:hover .submenu-content {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
+            display: none !important;
         }
         
         .modal {
@@ -1369,6 +1357,125 @@
             border-radius: 28px;
           }
         }
+
+        /* Add new modal for difficulty selection from menu */
+        .difficulty-modal-menu {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(26, 26, 46, 0.85);
+          z-index: 3000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease;
+        }
+        .difficulty-modal-menu.show {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .difficulty-modal-content {
+          background: #23233a;
+          border-radius: 20px;
+          padding: 64px 28px 28px 28px;
+          min-width: 240px;
+          max-width: 90vw;
+          color: #fff;
+          position: relative;
+          box-shadow: 0 8px 32px rgba(78,205,196,0.18);
+          border: 2px solid rgba(255,255,255,0.10);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        /* Modal header for perfect centering */
+        .difficulty-modal-header {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          width: 100%;
+          margin-bottom: 22px;
+        }
+        .difficulty-modal-title {
+          text-align: center;
+          font-size: 20px;
+          font-weight: bold;
+          margin-bottom: 18px;
+          background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          width: 100%;
+          display: block;
+        }
+        .difficulty-modal-close {
+          position: absolute;
+          top: 22px;
+          right: 22px;
+          background: #4ecdc4;
+          border: none;
+          border-radius: 50%;
+          color: #222;
+          font-size: 20px;
+          cursor: pointer;
+          opacity: 0.9;
+          width: 38px;
+          height: 38px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.2s, color 0.2s, opacity 0.2s;
+          box-shadow: 0 2px 8px rgba(78,205,196,0.10);
+          z-index: 10;
+        }
+        .difficulty-modal-close:hover {
+          background: #ffd89b;
+          color: #222;
+          opacity: 1;
+        }
+
+        .difficulty-modal-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          width: 100%;
+          align-items: center;
+          margin-top: 10px;
+        }
+
+        .difficulty-modal-btn {
+          width: 100%;
+          padding: 10px 0;
+          border-radius: 14px;
+          font-size: 13px;
+          font-weight: 600;
+          text-align: center;
+          background: linear-gradient(90deg, #4ecdc4 0%, #19547b 100%);
+          color: #fff;
+          border: none;
+          box-shadow: 0 2px 12px rgba(78,205,196,0.10);
+          transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+          margin-bottom: 0;
+          letter-spacing: 0.5px;
+          outline: none;
+          cursor: pointer;
+          display: block;
+        }
+        .difficulty-modal-btn:last-child {
+          margin-bottom: 0;
+        }
+        .difficulty-modal-btn:hover {
+          background: linear-gradient(90deg, #ffd89b 0%, #4ecdc4 100%);
+          color: #222;
+          box-shadow: 0 4px 16px rgba(255,216,155,0.12);
+        }
     </style>
 </head>
 <body>
@@ -1390,14 +1497,7 @@
             <button class="menu-burger" onclick="toggleMenu()">☰</button>
             <div class="menu-dropdown" id="menuDropdown">
                 <div class="menu-item" onclick="newGame()">🎮 New Game</div>
-                <div class="menu-item submenu">
-                    🎯 Change Difficulty
-                    <div class="submenu-content">
-                        <div class="menu-item" onclick="changeDifficulty('supereasy')">Easy (1-5, 5×3)</div>
-                        <div class="menu-item" onclick="changeDifficulty('easy')">Medium (1-10, 5×4)</div>
-                        <div class="menu-item" onclick="changeDifficulty('hard')">Hard (1-15, 5×5)</div>
-                    </div>
-                </div>
+                <div class="menu-item" onclick="showDifficultyMenuModal()">🎯 Change Difficulty</div>
                 <div class="menu-item" onclick="showHowToPlay()">❓ How to Play?</div>
             </div>
         </div>
@@ -1544,6 +1644,18 @@
     </div>
     
     <div class="message" id="message"></div>
+
+    <div class="difficulty-modal-menu" id="difficultyMenuModal">
+      <div class="difficulty-modal-content">
+        <button class="difficulty-modal-close" onclick="closeDifficultyMenuModal()">&times;</button>
+        <div class="difficulty-modal-title">Change Difficulty</div>
+        <div class="difficulty-modal-buttons">
+          <button class="difficulty-modal-btn" onclick="selectDifficultyFromMenu('supereasy')">Easy (1-5, 5×3)</button>
+          <button class="difficulty-modal-btn" onclick="selectDifficultyFromMenu('easy')">Medium (1-10, 5×4)</button>
+          <button class="difficulty-modal-btn" onclick="selectDifficultyFromMenu('hard')">Hard (1-15, 5×5)</button>
+        </div>
+      </div>
+    </div>
 
     <script>
         let gameState = {
@@ -3282,6 +3394,18 @@
             }, { passive: false });
           }
         });
+
+        function showDifficultyMenuModal() {
+          document.getElementById('difficultyMenuModal').classList.add('show');
+          document.getElementById('menuDropdown').classList.remove('show');
+        }
+        function closeDifficultyMenuModal() {
+          document.getElementById('difficultyMenuModal').classList.remove('show');
+        }
+        function selectDifficultyFromMenu(difficulty) {
+          closeDifficultyMenuModal();
+          changeDifficulty(difficulty);
+        }
     </script>
 </body>
 </html>
