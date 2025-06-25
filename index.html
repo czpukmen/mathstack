@@ -1262,6 +1262,68 @@
                 box-shadow: 0 0 20px rgba(255, 216, 155, 0.5) !important;
             }
         }
+
+        /* --- Add to the end of the <style> section --- */
+        .temp-slot {
+          flex-direction: row !important;
+          justify-content: flex-start !important;
+          align-items: center !important;
+          position: relative;
+          min-width: 0;
+          min-height: 0;
+          padding: 5px 8px;
+          gap: 0;
+        }
+        .temp-slot .temp-slot-label {
+          position: absolute;
+          top: 3px;
+          left: 8px;
+          color: #666;
+          font-size: 10px;
+          font-weight: bold;
+          z-index: 2;
+        }
+        .temp-slot .temp-number {
+          width: 38px;
+          height: 54px;
+          font-size: 1.25rem;
+          margin: 0 2px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 2;
+        }
+        .temp-slot .temp-stack-middle {
+          height: 54px;
+          min-width: 10px;
+          max-width: 38px;
+          margin: 0 2px;
+          border-radius: 8px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          z-index: 1;
+        }
+        .temp-slot .temp-stack-middle-lines {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          left: 0; top: 0;
+          z-index: 2;
+          pointer-events: none;
+        }
+        .temp-stack-middle-line {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 1.5px;
+          background: #111;
+          border-radius: 1px;
+          opacity: 0.7;
+        }
     </style>
 </head>
 <body>
@@ -1936,7 +1998,12 @@
                 slot.parentNode.replaceChild(newSlot, slot);
                 
                 newSlot.classList.remove('occupied', 'selected');
-                newSlot.innerHTML = `<span class="temp-slot-label">Stack ${index + 1}</span>`;
+                // Show label only if empty
+                if (!slotData || slotData.length === 0) {
+                    newSlot.innerHTML = `<span class="temp-slot-label">Stack ${index + 1}</span>`;
+                } else {
+                    newSlot.innerHTML = '';
+                }
                 
                 if (slotData && slotData.length > 0) {
                     newSlot.classList.add('occupied');
@@ -1959,34 +2026,45 @@
                             numberEl.textContent = card.num;
                             newSlot.appendChild(numberEl);
                         });
-                    } else {
-                        // Три и более карт - показываем верхнюю, пустую с индикатором, и нижнюю
-                        const topCard = slotData[slotData.length - 1];
-                        const bottomCard = slotData[0];
+                    } else if (slotData.length >= 3) {
+                        // Three or more cards - show left (lowest), middle stack, right (highest)
+                        const leftCard = slotData[0];
+                        const rightCard = slotData[slotData.length - 1];
                         const middleCount = slotData.length - 2;
-                        
-                        // Верхняя карта
-                        const topEl = document.createElement('div');
-                        topEl.className = `temp-number theme-${topCard.color}`;
-                        topEl.textContent = topCard.num;
-                        newSlot.appendChild(topEl);
-                        
-                        // Средняя пустая карта с индикатором
+
+                        // Left (lowest) card
+                        const leftEl = document.createElement('div');
+                        leftEl.className = `temp-number theme-${leftCard.color}`;
+                        leftEl.textContent = leftCard.num;
+                        newSlot.appendChild(leftEl);
+
+                        // Middle stack block
                         const middleEl = document.createElement('div');
-                        middleEl.className = `temp-middle-card theme-${topCard.color}`;
-                        
-                        const indicator = document.createElement('div');
-                        indicator.className = 'middle-card-indicator';
-                        indicator.textContent = middleCount;
-                        middleEl.appendChild(indicator);
-                        
+                        middleEl.className = `temp-stack-middle theme-${leftCard.color}`;
+                        // Dynamically set width based on count (max 38px)
+                        const minWidth = 10, maxWidth = 38;
+                        const width = Math.min(maxWidth, minWidth + middleCount * 7);
+                        middleEl.style.width = width + 'px';
+                        // Add vertical lines (number of lines = Math.max(0, middleCount - 1))
+                        const lines = document.createElement('div');
+                        lines.className = 'temp-stack-middle-lines';
+                        const lineCount = Math.max(0, middleCount - 1);
+                        for (let i = 0; i < lineCount; i++) {
+                            const line = document.createElement('div');
+                            line.className = 'temp-stack-middle-line';
+                            // Evenly space lines
+                            const percent = ((i + 1) / (lineCount + 1)) * 100;
+                            line.style.left = `calc(${percent}% - 1.5px)`;
+                            lines.appendChild(line);
+                        }
+                        middleEl.appendChild(lines);
                         newSlot.appendChild(middleEl);
-                        
-                        // Нижняя карта
-                        const bottomEl = document.createElement('div');
-                        bottomEl.className = `temp-number theme-${bottomCard.color}`;
-                        bottomEl.textContent = bottomCard.num;
-                        newSlot.appendChild(bottomEl);
+
+                        // Right (highest) card
+                        const rightEl = document.createElement('div');
+                        rightEl.className = `temp-number theme-${rightCard.color}`;
+                        rightEl.textContent = rightCard.num;
+                        newSlot.appendChild(rightEl);
                     }
                 } else {
                     // Empty slot - not draggable but can be drop target
