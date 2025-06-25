@@ -31,7 +31,12 @@
             box-sizing: border-box;
         }
         
+        html, body {
+            overflow: hidden;
+        }
+        
         body {
+            font-family: 'Arial', sans-serif;
             min-height: 100vh;
             background: #1a1a2e;
             box-sizing: border-box;
@@ -45,7 +50,6 @@
             height: 100vh;
             touch-action: manipulation;
             overflow: hidden;
-            font-family: 'Arial', sans-serif;
         }
         
         .game-container {
@@ -53,11 +57,10 @@
             max-width: 420px;
             max-height: 95vh;
             background: #1a1a2e;
-            border-radius: 24px;
+            border-radius: 36px;
             padding: 18px 10px 24px 10px;
             box-shadow: 0 4px 32px rgba(78,205,196,0.08);
-            border: 2.5px solid;
-            border-image: linear-gradient(90deg, #4ecdc4, #a55eea) 1;
+            border: 2.5px solid rgba(255,255,255,0.12);
             display: flex;
             flex-direction: column;
             overflow: visible;
@@ -72,17 +75,14 @@
                 font-size: clamp(18px, 5vw, 28px);
                 border-radius: 8px;
                 min-width: 0;
-                width: 90%;
-                height: 90%;
-                max-width: 48px;
-                max-height: 48px;
+                /* Remove width/height scaling for mobile */
             }
             .grid {
                 gap: 4px;
             }
             .cell.stack::after {
-                top: -6px;
-                right: -6px;
+                top: 6px;
+                right: 6px;
                 width: 16px;
                 height: 16px;
                 font-size: 10px;
@@ -91,7 +91,7 @@
                 max-width: 98vw;
                 padding-left: 2vw;
                 padding-right: 2vw;
-                border-radius: 18px;
+                border-radius: 28px;
             }
         }
         
@@ -1359,8 +1359,8 @@
             gap: 8px;
           }
           .cell.stack::after {
-            top: -6px;
-            right: -6px;
+            top: 6px;
+            right: 6px;
             width: 16px;
             height: 16px;
             font-size: 10px;
@@ -3269,6 +3269,16 @@
             }
             lastTouchEnd = now;
         }, false);
+
+        // Prevent rubber band scrolling on mobile for the main game area
+        document.addEventListener('DOMContentLoaded', function() {
+          var gameContainer = document.getElementById('gameContainer');
+          if (gameContainer) {
+            gameContainer.addEventListener('touchmove', function(e) {
+              e.preventDefault();
+            }, { passive: false });
+          }
+        });
     </script>
 </body>
 </html>
