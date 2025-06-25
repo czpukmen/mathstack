@@ -31,20 +31,11 @@
             box-sizing: border-box;
         }
         
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #1a1a2e;
-            padding: 0;
-            margin: 0;
+        body, .game-container {
             min-height: 100vh;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            touch-action: manipulation;
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
+            min-height: calc(100vh + env(safe-area-inset-top, 0px));
+            background: #1a1a2e;
+            box-sizing: border-box;
             padding-top: constant(safe-area-inset-top, 0px);
             padding-top: env(safe-area-inset-top, 0px);
         }
@@ -1327,6 +1318,28 @@
           background: #111;
           border-radius: 1px;
           opacity: 0.7;
+        }
+
+        @media (max-width: 600px) {
+          .cell {
+            font-size: clamp(10px, 2.5vw, 14px);
+            border-radius: 8px;
+            min-width: 0;
+            width: 90%;
+            height: 90%;
+            max-width: 48px;
+            max-height: 48px;
+          }
+          .grid {
+            gap: 8px;
+          }
+          .cell.stack::after {
+            top: -6px;
+            right: -6px;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+          }
         }
     </style>
 </head>
