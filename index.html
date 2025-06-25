@@ -1476,6 +1476,15 @@
           color: #222;
           box-shadow: 0 4px 16px rgba(255,216,155,0.12);
         }
+
+        /* Add logo image style for welcome screen */
+        .welcome-logo-img {
+          display: block;
+          margin: 0 auto 24px auto;
+          max-width: 180px;
+          width: 60%;
+          height: auto;
+        }
     </style>
 </head>
 <body>
@@ -1536,29 +1545,24 @@
     
     <div class="modal show" id="difficultyModal">
         <div class="modal-content difficulty-selection">
-            <div class="welcome-logo">🎯</div>
-            <h1 class="welcome-title">Math Stack</h1>
-            <p class="welcome-subtitle">Choose your difficulty level</p>
-            
+            <img src="mathstack-icon.png" alt="Math Stack Logo" class="welcome-logo-img" />
             <div class="difficulty-buttons">
-                <button class="difficulty-btn easy" onclick="selectDifficulty('supereasy')">
-                    <span class="difficulty-emoji">🌟</span>
-                    <span class="difficulty-name">Easy</span>
-                    <span class="difficulty-range">1-5 (5×3)</span>
-                </button>
-                
-                <button class="difficulty-btn medium" onclick="selectDifficulty('easy')">
-                    <span class="difficulty-emoji">⭐</span>
-                    <span class="difficulty-name">Medium</span>
-                    <span class="difficulty-range">1-10 (5×4)</span>
-                </button>
-                
-                <button class="difficulty-btn hard" onclick="selectDifficulty('hard')">
-                    <span class="difficulty-emoji">🔥</span>
-                    <span class="difficulty-name">Hard</span>
-                    <span class="difficulty-range">1-15 (5×5)</span>
-                    <span class="recommended-tag">RECOMMENDED</span>
-                </button>
+              <button class="difficulty-btn easy" onclick="selectDifficulty('supereasy')">
+                <span class="difficulty-emoji">🌟</span>
+                <span class="difficulty-name">Easy</span>
+                <span class="difficulty-range">1-5 (5×3)</span>
+              </button>
+              <button class="difficulty-btn medium" onclick="selectDifficulty('easy')">
+                <span class="difficulty-emoji">⭐</span>
+                <span class="difficulty-name">Medium</span>
+                <span class="difficulty-range">1-10 (5×4)</span>
+              </button>
+              <button class="difficulty-btn hard" onclick="selectDifficulty('hard')">
+                <span class="difficulty-emoji">🔥</span>
+                <span class="difficulty-name">Hard</span>
+                <span class="difficulty-range">1-15 (5×5)</span>
+                <span class="recommended-tag">RECOMMENDED</span>
+              </button>
             </div>
         </div>
     </div>
