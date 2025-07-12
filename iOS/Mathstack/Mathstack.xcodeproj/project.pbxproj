@@ -1,0 +1,652 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3D2F81792E22B67900EE691E /* MathstackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81702E22B67900EE691E /* MathstackTests.swift */; };
+		3D2F817A2E22B67900EE691E /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F816D2E22B67900EE691E /* LeaderboardView.swift */; };
+		3D2F817B2E22B67900EE691E /* MathStackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F816F2E22B67900EE691E /* MathStackApp.swift */; };
+		3D2F817C2E22B67900EE691E /* MathstackUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81732E22B67900EE691E /* MathstackUITestsLaunchTests.swift */; };
+		3D2F817D2E22B67900EE691E /* DifficultySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81672E22B67900EE691E /* DifficultySelectionView.swift */; };
+		3D2F817E2E22B67900EE691E /* VictoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81782E22B67900EE691E /* VictoryView.swift */; };
+		3D2F817F2E22B67900EE691E /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F816A2E22B67900EE691E /* GameView.swift */; };
+		3D2F81802E22B67900EE691E /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81762E22B67900EE691E /* ProfileView.swift */; };
+		3D2F81812E22B67900EE691E /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81692E22B67900EE691E /* GameState.swift */; };
+		3D2F81822E22B67900EE691E /* MathstackUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81722E22B67900EE691E /* MathstackUITests.swift */; };
+		3D2F81832E22B67900EE691E /* HowToPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F816C2E22B67900EE691E /* HowToPlayView.swift */; };
+		3D2F81842E22B67900EE691E /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81752E22B67900EE691E /* ProfileManager.swift */; };
+		3D2F81852E22B67900EE691E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81662E22B67900EE691E /* ContentView.swift */; };
+		3D2F81862E22B67900EE691E /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F816B2E22B67900EE691E /* HistoryView.swift */; };
+		3D2F81872E22B67900EE691E /* GameComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81682E22B67900EE691E /* GameComponents.swift */; };
+		3D2F81882E22B67900EE691E /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F816E2E22B67900EE691E /* MainMenuView.swift */; };
+		3D2F81892E22B67900EE691E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F81652E22B67900EE691E /* Assets.xcassets */; };
+		3D2F818A2E22B67900EE691E /* Project_Setup.md in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F81772E22B67900EE691E /* Project_Setup.md */; };
+		3D2F81902E22C27900EE691E /* GameDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F818F2E22C27900EE691E /* GameDataManager.swift */; };
+		3D2F81922E22C91B00EE691E /* SeedInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81912E22C91B00EE691E /* SeedInputView.swift */; };
+		3D2F81942E22CC9100EE691E /* PauseMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F81932E22CC9100EE691E /* PauseMenuView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3D85B10B2E15CD880029F238 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D85B0F52E15CD870029F238 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D85B0FC2E15CD870029F238;
+			remoteInfo = Mathstack;
+		};
+		3D85B1152E15CD880029F238 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D85B0F52E15CD870029F238 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D85B0FC2E15CD870029F238;
+			remoteInfo = Mathstack;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3D2F81652E22B67900EE691E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3D2F81662E22B67900EE691E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		3D2F81672E22B67900EE691E /* DifficultySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultySelectionView.swift; sourceTree = "<group>"; };
+		3D2F81682E22B67900EE691E /* GameComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameComponents.swift; sourceTree = "<group>"; };
+		3D2F81692E22B67900EE691E /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		3D2F816A2E22B67900EE691E /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		3D2F816B2E22B67900EE691E /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		3D2F816C2E22B67900EE691E /* HowToPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToPlayView.swift; sourceTree = "<group>"; };
+		3D2F816D2E22B67900EE691E /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
+		3D2F816E2E22B67900EE691E /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
+		3D2F816F2E22B67900EE691E /* MathStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathStackApp.swift; sourceTree = "<group>"; };
+		3D2F81702E22B67900EE691E /* MathstackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathstackTests.swift; sourceTree = "<group>"; };
+		3D2F81722E22B67900EE691E /* MathstackUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathstackUITests.swift; sourceTree = "<group>"; };
+		3D2F81732E22B67900EE691E /* MathstackUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathstackUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3D2F81752E22B67900EE691E /* ProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
+		3D2F81762E22B67900EE691E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		3D2F81772E22B67900EE691E /* Project_Setup.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Project_Setup.md; sourceTree = "<group>"; };
+		3D2F81782E22B67900EE691E /* VictoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VictoryView.swift; sourceTree = "<group>"; };
+		3D2F818F2E22C27900EE691E /* GameDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataManager.swift; sourceTree = "<group>"; };
+		3D2F81912E22C91B00EE691E /* SeedInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedInputView.swift; sourceTree = "<group>"; };
+		3D2F81932E22CC9100EE691E /* PauseMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseMenuView.swift; sourceTree = "<group>"; };
+		3D85B0FD2E15CD870029F238 /* Mathstack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mathstack.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D85B10A2E15CD880029F238 /* MathstackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MathstackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D85B1142E15CD880029F238 /* MathstackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MathstackUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3D85B0FA2E15CD870029F238 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D85B1072E15CD880029F238 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D85B1112E15CD880029F238 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3D2F81712E22B67900EE691E /* MathstackTests */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F81702E22B67900EE691E /* MathstackTests.swift */,
+			);
+			path = MathstackTests;
+			sourceTree = "<group>";
+		};
+		3D2F81742E22B67900EE691E /* MathstackUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F81722E22B67900EE691E /* MathstackUITests.swift */,
+				3D2F81732E22B67900EE691E /* MathstackUITestsLaunchTests.swift */,
+			);
+			path = MathstackUITests;
+			sourceTree = "<group>";
+		};
+		3D85B0F42E15CD870029F238 = {
+			isa = PBXGroup;
+			children = (
+				3D2F81652E22B67900EE691E /* Assets.xcassets */,
+				3D2F81662E22B67900EE691E /* ContentView.swift */,
+				3D2F81672E22B67900EE691E /* DifficultySelectionView.swift */,
+				3D2F81682E22B67900EE691E /* GameComponents.swift */,
+				3D2F818F2E22C27900EE691E /* GameDataManager.swift */,
+				3D2F81692E22B67900EE691E /* GameState.swift */,
+				3D2F816A2E22B67900EE691E /* GameView.swift */,
+				3D2F816B2E22B67900EE691E /* HistoryView.swift */,
+				3D2F816C2E22B67900EE691E /* HowToPlayView.swift */,
+				3D2F816D2E22B67900EE691E /* LeaderboardView.swift */,
+				3D2F816E2E22B67900EE691E /* MainMenuView.swift */,
+				3D2F81912E22C91B00EE691E /* SeedInputView.swift */,
+				3D2F81932E22CC9100EE691E /* PauseMenuView.swift */,
+				3D2F816F2E22B67900EE691E /* MathStackApp.swift */,
+				3D2F81712E22B67900EE691E /* MathstackTests */,
+				3D2F81742E22B67900EE691E /* MathstackUITests */,
+				3D2F81752E22B67900EE691E /* ProfileManager.swift */,
+				3D2F81762E22B67900EE691E /* ProfileView.swift */,
+				3D2F81772E22B67900EE691E /* Project_Setup.md */,
+				3D2F81782E22B67900EE691E /* VictoryView.swift */,
+				3D85B0FE2E15CD870029F238 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3D85B0FE2E15CD870029F238 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3D85B0FD2E15CD870029F238 /* Mathstack.app */,
+				3D85B10A2E15CD880029F238 /* MathstackTests.xctest */,
+				3D85B1142E15CD880029F238 /* MathstackUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3D85B0FC2E15CD870029F238 /* Mathstack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D85B11E2E15CD880029F238 /* Build configuration list for PBXNativeTarget "Mathstack" */;
+			buildPhases = (
+				3D85B0F92E15CD870029F238 /* Sources */,
+				3D85B0FA2E15CD870029F238 /* Frameworks */,
+				3D85B0FB2E15CD870029F238 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Mathstack;
+			packageProductDependencies = (
+			);
+			productName = Mathstack;
+			productReference = 3D85B0FD2E15CD870029F238 /* Mathstack.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3D85B1092E15CD880029F238 /* MathstackTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D85B1212E15CD880029F238 /* Build configuration list for PBXNativeTarget "MathstackTests" */;
+			buildPhases = (
+				3D85B1062E15CD880029F238 /* Sources */,
+				3D85B1072E15CD880029F238 /* Frameworks */,
+				3D85B1082E15CD880029F238 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D85B10C2E15CD880029F238 /* PBXTargetDependency */,
+			);
+			name = MathstackTests;
+			packageProductDependencies = (
+			);
+			productName = MathstackTests;
+			productReference = 3D85B10A2E15CD880029F238 /* MathstackTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3D85B1132E15CD880029F238 /* MathstackUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D85B1242E15CD880029F238 /* Build configuration list for PBXNativeTarget "MathstackUITests" */;
+			buildPhases = (
+				3D85B1102E15CD880029F238 /* Sources */,
+				3D85B1112E15CD880029F238 /* Frameworks */,
+				3D85B1122E15CD880029F238 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D85B1162E15CD880029F238 /* PBXTargetDependency */,
+			);
+			name = MathstackUITests;
+			packageProductDependencies = (
+			);
+			productName = MathstackUITests;
+			productReference = 3D85B1142E15CD880029F238 /* MathstackUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3D85B0F52E15CD870029F238 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					3D85B0FC2E15CD870029F238 = {
+						CreatedOnToolsVersion = 16.4;
+						LastSwiftMigration = 1640;
+					};
+					3D85B1092E15CD880029F238 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 3D85B0FC2E15CD870029F238;
+					};
+					3D85B1132E15CD880029F238 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 3D85B0FC2E15CD870029F238;
+					};
+				};
+			};
+			buildConfigurationList = 3D85B0F82E15CD870029F238 /* Build configuration list for PBXProject "Mathstack" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3D85B0F42E15CD870029F238;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3D85B0FE2E15CD870029F238 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3D85B0FC2E15CD870029F238 /* Mathstack */,
+				3D85B1092E15CD880029F238 /* MathstackTests */,
+				3D85B1132E15CD880029F238 /* MathstackUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3D85B0FB2E15CD870029F238 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D2F81892E22B67900EE691E /* Assets.xcassets in Resources */,
+				3D2F818A2E22B67900EE691E /* Project_Setup.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D85B1082E15CD880029F238 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D85B1122E15CD880029F238 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3D85B0F92E15CD870029F238 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D2F817A2E22B67900EE691E /* LeaderboardView.swift in Sources */,
+				3D2F81902E22C27900EE691E /* GameDataManager.swift in Sources */,
+				3D2F817B2E22B67900EE691E /* MathStackApp.swift in Sources */,
+				3D2F817D2E22B67900EE691E /* DifficultySelectionView.swift in Sources */,
+				3D2F817E2E22B67900EE691E /* VictoryView.swift in Sources */,
+				3D2F817F2E22B67900EE691E /* GameView.swift in Sources */,
+				3D2F81922E22C91B00EE691E /* SeedInputView.swift in Sources */,
+				3D2F81802E22B67900EE691E /* ProfileView.swift in Sources */,
+				3D2F81812E22B67900EE691E /* GameState.swift in Sources */,
+				3D2F81832E22B67900EE691E /* HowToPlayView.swift in Sources */,
+				3D2F81842E22B67900EE691E /* ProfileManager.swift in Sources */,
+				3D2F81852E22B67900EE691E /* ContentView.swift in Sources */,
+				3D2F81942E22CC9100EE691E /* PauseMenuView.swift in Sources */,
+				3D2F81862E22B67900EE691E /* HistoryView.swift in Sources */,
+				3D2F81872E22B67900EE691E /* GameComponents.swift in Sources */,
+				3D2F81882E22B67900EE691E /* MainMenuView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D85B1062E15CD880029F238 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D2F81792E22B67900EE691E /* MathstackTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D85B1102E15CD880029F238 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D2F81822E22B67900EE691E /* MathstackUITests.swift in Sources */,
+				3D2F817C2E22B67900EE691E /* MathstackUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3D85B10C2E15CD880029F238 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D85B0FC2E15CD870029F238 /* Mathstack */;
+			targetProxy = 3D85B10B2E15CD880029F238 /* PBXContainerItemProxy */;
+		};
+		3D85B1162E15CD880029F238 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D85B0FC2E15CD870029F238 /* Mathstack */;
+			targetProxy = 3D85B1152E15CD880029F238 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3D85B11C2E15CD880029F238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = RU5U6ZV7CD;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3D85B11D2E15CD880029F238 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = RU5U6ZV7CD;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3D85B11F2E15CD880029F238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RU5U6ZV7CD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Mathstack;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.puzzle-games";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hazerim.mathstack;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		3D85B1202E15CD880029F238 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RU5U6ZV7CD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Mathstack;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.puzzle-games";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hazerim.mathstack;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		3D85B1222E15CD880029F238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RU5U6ZV7CD;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = hazerim.MathstackTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mathstack.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mathstack";
+			};
+			name = Debug;
+		};
+		3D85B1232E15CD880029F238 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RU5U6ZV7CD;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = hazerim.MathstackTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mathstack.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mathstack";
+			};
+			name = Release;
+		};
+		3D85B1252E15CD880029F238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RU5U6ZV7CD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = hazerim.MathstackUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Mathstack;
+			};
+			name = Debug;
+		};
+		3D85B1262E15CD880029F238 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RU5U6ZV7CD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = hazerim.MathstackUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Mathstack;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3D85B0F82E15CD870029F238 /* Build configuration list for PBXProject "Mathstack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D85B11C2E15CD880029F238 /* Debug */,
+				3D85B11D2E15CD880029F238 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D85B11E2E15CD880029F238 /* Build configuration list for PBXNativeTarget "Mathstack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D85B11F2E15CD880029F238 /* Debug */,
+				3D85B1202E15CD880029F238 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D85B1212E15CD880029F238 /* Build configuration list for PBXNativeTarget "MathstackTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D85B1222E15CD880029F238 /* Debug */,
+				3D85B1232E15CD880029F238 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D85B1242E15CD880029F238 /* Build configuration list for PBXNativeTarget "MathstackUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D85B1252E15CD880029F238 /* Debug */,
+				3D85B1262E15CD880029F238 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3D85B0F52E15CD870029F238 /* Project object */;
+}
